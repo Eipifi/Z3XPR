@@ -1,13 +1,19 @@
+/*
+ * Example XPR expression
+ */
+
+// type declarations
 type Buyer;
-type AuctionID int;
+type AuctionID Int;
 type WinnerTuple (AuctionID, Buyer);
 
-declare WinnerSet
+// shared sets
+declare WinnerSet Set<WinnerTuple>;
+declare BuyerSet Set<Buyer>;
 
+// example invariant
+assert Forall AuctionID auction, Buyer buyer: WinnerTuple(auction, buyer) in WinnerSet => buyer in BuyerSet;
 
-
-
-Forall AuctionID auction, Buyer buyer: WinnerTuple(auction, buyer) in WinnerSet => buyer in BuyerSet
-
-(forall ((auction AuctionID) (buyer Buyer))
-  (=> (select WinnerSet (WinnerTuple auction buyer)) (select BuyerSet buyer)))
+// example postcondition (effect)
+WinnerSet += buyer;
+WinnerSet = WinnerSet + WinnerTuple(auction, 0);
