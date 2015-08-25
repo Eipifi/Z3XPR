@@ -1,0 +1,36 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    examples
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+
+    examplesCompile project
+    examplesCompile 'org.slf4j:slf4j-log4j12:1.7.5'
+
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.javatuples:javatuples:1.2'
+    compile 'org.antlr:antlr4:4.5.1'
+    compile fileTree(dir: 'lib', include: ['*.jar'])
+}
+
+tasks.withType(JavaExec) {
+    systemProperty "java.library.path", file("./lib")
+}
+
+task(runExamples, dependsOn: 'examplesClasses', type: JavaExec) {
+    main = 'example.simple.Main'
+    classpath = sourceSets.examples.runtimeClasspath
+}
+
+task(runExampleXPR, dependsOn: 'examplesClasses', type: JavaExec) {
+    main = 'example.xpr.Main'
+    classpath = sourceSets.examples.runtimeClasspath
+}

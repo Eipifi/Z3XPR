@@ -1,0 +1,13 @@
+type Buyer;
+type AuctionID int;
+type WinnerTuple (AuctionID, Buyer);
+
+declare WinnerSet
+
+
+
+
+Forall AuctionID auction, Buyer buyer: WinnerTuple(auction, buyer) in WinnerSet => buyer in BuyerSet
+
+(forall ((auction AuctionID) (buyer Buyer))
+  (=> (select WinnerSet (WinnerTuple auction buyer)) (select BuyerSet buyer)))
