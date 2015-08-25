@@ -114,5 +114,6 @@ gradle-app.setting
 
 #################
 
+!lib/*.jar
 stuff
 test.log
