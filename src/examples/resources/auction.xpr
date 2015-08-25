@@ -8,8 +8,8 @@ type AuctionID Int;
 type WinnerTuple (AuctionID, Buyer);
 
 // shared sets
-declare WinnerSet Set<WinnerTuple>;
-declare BuyerSet Set<Buyer>;
+declare Set<WinnerTuple> WinnerSet;
+declare Set<Buyer> BuyerSet;
 
 // example invariant
 assert Forall AuctionID auction, Buyer buyer: WinnerTuple(auction, buyer) in WinnerSet => buyer in BuyerSet;

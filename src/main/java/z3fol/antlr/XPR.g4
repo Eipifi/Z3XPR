@@ -12,7 +12,6 @@ RPAREN: ')';
 PLUS: '+';
 MINUS: '-';
 TIMES: '*';
-MOD: '%';
 DIV: '/';
 GT: '>';
 GE: '>=';
@@ -24,7 +23,7 @@ POW: '^';
 OR: '|';
 AND: '&';
 IMPLIES: '=>';
-IIF: '<=>';
+IFF: '<=>';
 XOR: 'XOR';
 NOT: '!';
 SEMICOLON: ';';
@@ -68,24 +67,24 @@ type
     ;
 typeTuple: LPAREN type (',' type) RPAREN;
 typeGeneric: identifier_uc LT type GT;
-varDeclaration: KWD_DECLARE identifier type;
+varDeclaration: KWD_DECLARE variableAndType;
 
-variable: IDENTIFIER_LC;
+variable: identifier;
 variableAndType: type variable;
 variableAndTypeList: variableAndType (',' variableAndType)*;
 
 fact: KWD_ASSERT quantifier;
 quantifier: ((FORALL | EXISTS) variableAndTypeList ':')? logic_statement;
-logic_statement: disjunction (logop logic_statement)*;
+logic_statement: disjunction (logop disjunction)?;
 disjunction: conjunction (OR conjunction)*;
 conjunction: negation (AND negation)*;
 negation: NOT? (predicate | LPAREN quantifier RPAREN);
 
 equation: expression relop expression;
 relop: EQ | GT | LT;
-logop: IMPLIES | IIF | XOR;
+logop: IMPLIES | IFF | XOR;
 
-expression: mulExpression ((PLUS|MINUS|MOD) mulExpression)*;
+expression: mulExpression ((PLUS|MINUS) mulExpression)*;
 expression_list: expression (',' expression)*;
 mulExpression: powExpression ((TIMES|DIV) powExpression)*;
 powExpression: atom (POW expression)?;
