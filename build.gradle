@@ -29,8 +29,3 @@ task(runExamples, dependsOn: 'examplesClasses', type: JavaExec) {
     main = 'example.simple.Main'
     classpath = sourceSets.examples.runtimeClasspath
 }
-
-task(runExampleXPR, dependsOn: 'examplesClasses', type: JavaExec) {
-    main = 'example.xpr.Main'
-    classpath = sourceSets.examples.runtimeClasspath
-}
