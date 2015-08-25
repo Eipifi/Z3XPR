@@ -1,6 +1,6 @@
 grammar XPR;
 
-@header {package z3fol.xpr;}
+@header {package z3fol.antlr;}
 
 /*------------------------------------------------------------------
  * PARSER RULES
@@ -46,6 +46,7 @@ NUM_DECIMAL: [0-9]+;
 IDENTIFIER_UC : [A-Z_][a-zA-Z0-9_]*;
 IDENTIFIER_LC : [a-z_][a-zA-Z0-9_]*;
 identifier: IDENTIFIER_LC | IDENTIFIER_UC;
+identifier_uc: IDENTIFIER_UC;
 
 number: MINUS? NUM_DECIMAL;
 
@@ -58,16 +59,15 @@ line
     | instruction
     ;
 
-typeDeclaration: KWD_TYPE IDENTIFIER_UC type?;
+typeDeclaration: KWD_TYPE identifier type?;
 
 type
-    : typeIdentifier
+    : identifier_uc
     | typeTuple
     | typeGeneric
     ;
-typeIdentifier: IDENTIFIER_UC;
 typeTuple: LPAREN type (',' type) RPAREN;
-typeGeneric: IDENTIFIER_UC LT type GT;
+typeGeneric: identifier_uc LT type GT;
 varDeclaration: KWD_DECLARE identifier type;
 
 variable: IDENTIFIER_LC;

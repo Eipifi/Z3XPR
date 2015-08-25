@@ -1,23 +1,18 @@
 package example.simple;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+import z3fol.Converter;
 
-import com.microsoft.z3.Context;
-import com.microsoft.z3.Global;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.net.URL;
 
 public class Main {
-    public static void main(String[] args) {
 
-    }
-
-    public static Context ctx() {
-        Global.ToggleWarningMessages(true);
-        //Log.open("test.log");
-        Map<String, String> cfg = new HashMap<>();
-        cfg.put("model", "true");
-        return new Context(cfg);
+    public static void main(String[] args) throws IOException {
+        URL url = Resources.getResource("auction.xpr");
+        String text = Resources.toString(url, Charsets.UTF_8);
+        Converter.folToZ3(text);
     }
 
 }

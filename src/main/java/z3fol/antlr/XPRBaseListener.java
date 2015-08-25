@@ -1,5 +1,5 @@
 // Generated from XPR.g4 by ANTLR 4.5.1
-package z3fol.xpr;
+package z3fol.antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -23,6 +23,18 @@ public class XPRBaseListener implements XPRListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIdentifier(XPRParser.IdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdentifier_uc(XPRParser.Identifier_ucContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifier_uc(XPRParser.Identifier_ucContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -83,18 +95,6 @@ public class XPRBaseListener implements XPRListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitType(XPRParser.TypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeIdentifier(XPRParser.TypeIdentifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeIdentifier(XPRParser.TypeIdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

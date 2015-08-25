@@ -1,5 +1,5 @@
 // Generated from XPR.g4 by ANTLR 4.5.1
-package z3fol.xpr;
+package z3fol.antlr;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

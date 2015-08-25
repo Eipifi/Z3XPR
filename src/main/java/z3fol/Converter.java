@@ -1,12 +1,16 @@
 package z3fol;
 
+import com.microsoft.z3.Context;
+import com.microsoft.z3.Global;
+import com.microsoft.z3.Log;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import z3fol.xpr.XPRBaseListener;
-import z3fol.xpr.XPRLexer;
-import z3fol.xpr.XPRListener;
-import z3fol.xpr.XPRParser;
+import z3fol.xpr.DocumentParser;
+import z3fol.antlr.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Converter {
 
@@ -26,7 +30,17 @@ public class Converter {
 
         // Walk it and attach our listener
         ParseTreeWalker walker = new ParseTreeWalker();
-        XPRListener listener = new XPRBaseListener();
+        XPRListener listener = freshListener();
         walker.walk(listener, documentContext);
+    }
+
+    private static XPRListener freshListener() {
+        Global.ToggleWarningMessages(true);
+        Log.open("test.log");
+
+        Map<String, String> cfg = new HashMap<>();
+        cfg.put("model", "true");
+        Context ctx = new Context(cfg);
+        return new DocumentParser(ctx);
     }
 }

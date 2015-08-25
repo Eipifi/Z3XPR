@@ -1,5 +1,5 @@
 // Generated from XPR.g4 by ANTLR 4.5.1
-package z3fol.xpr;
+package z3fol.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -17,6 +17,16 @@ public interface XPRListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIdentifier(XPRParser.IdentifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#identifier_uc}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifier_uc(XPRParser.Identifier_ucContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#identifier_uc}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifier_uc(XPRParser.Identifier_ucContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link XPRParser#number}.
 	 * @param ctx the parse tree
@@ -67,16 +77,6 @@ public interface XPRListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitType(XPRParser.TypeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#typeIdentifier}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeIdentifier(XPRParser.TypeIdentifierContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#typeIdentifier}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeIdentifier(XPRParser.TypeIdentifierContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link XPRParser#typeTuple}.
 	 * @param ctx the parse tree
