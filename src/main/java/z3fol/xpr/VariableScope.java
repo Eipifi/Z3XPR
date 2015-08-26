@@ -1,5 +1,7 @@
 package z3fol.xpr;
 
+import com.microsoft.z3.ArithExpr;
+import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Expr;
 
 import java.util.HashMap;
@@ -28,6 +30,24 @@ public class VariableScope {
         VariableScope sub = new VariableScope();
         sub.fallback = this::get;
         return sub;
+    }
+
+    public Expr mustGet(String key) {
+        Expr expr = get(key);
+        if (expr == null) throw new IllegalStateException("Failed to fetch variable " + key);
+        return expr;
+    }
+
+    public BoolExpr mustGetBool(String key) {
+        Expr expr = mustGet(key);
+        if (expr instanceof BoolExpr) return (BoolExpr) expr;
+        throw new IllegalStateException("Variable " + key + " is not of type Bool.");
+    }
+
+    public ArithExpr mustGetArith(String key) {
+        Expr expr = mustGet(key);
+        if (expr instanceof ArithExpr) return (ArithExpr) expr;
+        throw new IllegalStateException("Variable " + key + " is not an arithmetic type.");
     }
 
 }

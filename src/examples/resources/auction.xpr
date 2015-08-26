@@ -5,15 +5,12 @@
 // type declarations
 type Buyer;
 type AuctionID Int;
-type WinnerTuple (AuctionID, Buyer);
+type Winner (AuctionID, Buyer);
 
 // shared sets
-declare Set<WinnerTuple> WinnerSet;
-declare Set<Buyer> BuyerSet;
+declare Set<Winner> winnerSet;
+declare Set<Buyer> buyerSet;
 
 // example invariant
-assert Forall AuctionID auction, Buyer buyer: WinnerTuple(auction, buyer) in WinnerSet => buyer in BuyerSet;
-
-// example postcondition (effect)
-WinnerSet += buyer;
-WinnerSet = WinnerSet + WinnerTuple(auction, 0);
+assert Forall AuctionID auction, Buyer buyer: 
+    Winner(auction, buyer) in winnerSet => buyer in buyerSet;

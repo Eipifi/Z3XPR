@@ -8,26 +8,6 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface XPRListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#identifier}.
-	 * @param ctx the parse tree
-	 */
-	void enterIdentifier(XPRParser.IdentifierContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#identifier}.
-	 * @param ctx the parse tree
-	 */
-	void exitIdentifier(XPRParser.IdentifierContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#identifier_uc}.
-	 * @param ctx the parse tree
-	 */
-	void enterIdentifier_uc(XPRParser.Identifier_ucContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#identifier_uc}.
-	 * @param ctx the parse tree
-	 */
-	void exitIdentifier_uc(XPRParser.Identifier_ucContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link XPRParser#number}.
 	 * @param ctx the parse tree
 	 */
@@ -38,36 +18,6 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitNumber(XPRParser.NumberContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#document}.
-	 * @param ctx the parse tree
-	 */
-	void enterDocument(XPRParser.DocumentContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#document}.
-	 * @param ctx the parse tree
-	 */
-	void exitDocument(XPRParser.DocumentContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#line}.
-	 * @param ctx the parse tree
-	 */
-	void enterLine(XPRParser.LineContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#line}.
-	 * @param ctx the parse tree
-	 */
-	void exitLine(XPRParser.LineContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeDeclaration(XPRParser.TypeDeclarationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#typeDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeDeclaration(XPRParser.TypeDeclarationContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link XPRParser#type}.
 	 * @param ctx the parse tree
 	 */
@@ -77,6 +27,16 @@ public interface XPRListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitType(XPRParser.TypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#typeIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypeIdentifier(XPRParser.TypeIdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#typeIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypeIdentifier(XPRParser.TypeIdentifierContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link XPRParser#typeTuple}.
 	 * @param ctx the parse tree
@@ -98,16 +58,6 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitTypeGeneric(XPRParser.TypeGenericContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#varDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterVarDeclaration(XPRParser.VarDeclarationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#varDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitVarDeclaration(XPRParser.VarDeclarationContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link XPRParser#variable}.
 	 * @param ctx the parse tree
 	 */
@@ -118,55 +68,275 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitVariable(XPRParser.VariableContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#variableAndType}.
+	 * Enter a parse tree produced by {@link XPRParser#variableTuple}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableAndType(XPRParser.VariableAndTypeContext ctx);
+	void enterVariableTuple(XPRParser.VariableTupleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#variableAndType}.
+	 * Exit a parse tree produced by {@link XPRParser#variableTuple}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableAndType(XPRParser.VariableAndTypeContext ctx);
+	void exitVariableTuple(XPRParser.VariableTupleContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#variableAndTypeList}.
+	 * Enter a parse tree produced by {@link XPRParser#variableIdentifier}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableAndTypeList(XPRParser.VariableAndTypeListContext ctx);
+	void enterVariableIdentifier(XPRParser.VariableIdentifierContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#variableAndTypeList}.
+	 * Exit a parse tree produced by {@link XPRParser#variableIdentifier}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableAndTypeList(XPRParser.VariableAndTypeListContext ctx);
+	void exitVariableIdentifier(XPRParser.VariableIdentifierContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#fact}.
+	 * Enter a parse tree produced by {@link XPRParser#variableWithType}.
 	 * @param ctx the parse tree
 	 */
-	void enterFact(XPRParser.FactContext ctx);
+	void enterVariableWithType(XPRParser.VariableWithTypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#fact}.
+	 * Exit a parse tree produced by {@link XPRParser#variableWithType}.
 	 * @param ctx the parse tree
 	 */
-	void exitFact(XPRParser.FactContext ctx);
+	void exitVariableWithType(XPRParser.VariableWithTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#quantifier}.
+	 * Enter a parse tree produced by {@link XPRParser#variableWithTypeList}.
 	 * @param ctx the parse tree
 	 */
-	void enterQuantifier(XPRParser.QuantifierContext ctx);
+	void enterVariableWithTypeList(XPRParser.VariableWithTypeListContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#quantifier}.
+	 * Exit a parse tree produced by {@link XPRParser#variableWithTypeList}.
 	 * @param ctx the parse tree
 	 */
-	void exitQuantifier(XPRParser.QuantifierContext ctx);
+	void exitVariableWithTypeList(XPRParser.VariableWithTypeListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#logic_statement}.
+	 * Enter a parse tree produced by {@link XPRParser#anyExpression}.
 	 * @param ctx the parse tree
 	 */
-	void enterLogic_statement(XPRParser.Logic_statementContext ctx);
+	void enterAnyExpression(XPRParser.AnyExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#logic_statement}.
+	 * Exit a parse tree produced by {@link XPRParser#anyExpression}.
 	 * @param ctx the parse tree
 	 */
-	void exitLogic_statement(XPRParser.Logic_statementContext ctx);
+	void exitAnyExpression(XPRParser.AnyExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#sumop}.
+	 * @param ctx the parse tree
+	 */
+	void enterSumop(XPRParser.SumopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#sumop}.
+	 * @param ctx the parse tree
+	 */
+	void exitSumop(XPRParser.SumopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#mulop}.
+	 * @param ctx the parse tree
+	 */
+	void enterMulop(XPRParser.MulopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#mulop}.
+	 * @param ctx the parse tree
+	 */
+	void exitMulop(XPRParser.MulopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#arithExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterArithExpression(XPRParser.ArithExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#arithExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitArithExpression(XPRParser.ArithExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#arithExpressionList}.
+	 * @param ctx the parse tree
+	 */
+	void enterArithExpressionList(XPRParser.ArithExpressionListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#arithExpressionList}.
+	 * @param ctx the parse tree
+	 */
+	void exitArithExpressionList(XPRParser.ArithExpressionListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#arithSum}.
+	 * @param ctx the parse tree
+	 */
+	void enterArithSum(XPRParser.ArithSumContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#arithSum}.
+	 * @param ctx the parse tree
+	 */
+	void exitArithSum(XPRParser.ArithSumContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#arithMul}.
+	 * @param ctx the parse tree
+	 */
+	void enterArithMul(XPRParser.ArithMulContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#arithMul}.
+	 * @param ctx the parse tree
+	 */
+	void exitArithMul(XPRParser.ArithMulContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#arithPow}.
+	 * @param ctx the parse tree
+	 */
+	void enterArithPow(XPRParser.ArithPowContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#arithPow}.
+	 * @param ctx the parse tree
+	 */
+	void exitArithPow(XPRParser.ArithPowContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#arithAtom}.
+	 * @param ctx the parse tree
+	 */
+	void enterArithAtom(XPRParser.ArithAtomContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#arithAtom}.
+	 * @param ctx the parse tree
+	 */
+	void exitArithAtom(XPRParser.ArithAtomContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#setExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetExpression(XPRParser.SetExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#setExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetExpression(XPRParser.SetExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#setSum}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetSum(XPRParser.SetSumContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#setSum}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetSum(XPRParser.SetSumContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#setMul}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetMul(XPRParser.SetMulContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#setMul}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetMul(XPRParser.SetMulContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#setAtom}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetAtom(XPRParser.SetAtomContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#setAtom}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetAtom(XPRParser.SetAtomContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#inlineSet}.
+	 * @param ctx the parse tree
+	 */
+	void enterInlineSet(XPRParser.InlineSetContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#inlineSet}.
+	 * @param ctx the parse tree
+	 */
+	void exitInlineSet(XPRParser.InlineSetContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#cmpop}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmpop(XPRParser.CmpopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#cmpop}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmpop(XPRParser.CmpopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#cmpStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmpStatement(XPRParser.CmpStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#cmpStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmpStatement(XPRParser.CmpStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#eqop}.
+	 * @param ctx the parse tree
+	 */
+	void enterEqop(XPRParser.EqopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#eqop}.
+	 * @param ctx the parse tree
+	 */
+	void exitEqop(XPRParser.EqopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#eqStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterEqStatement(XPRParser.EqStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#eqStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitEqStatement(XPRParser.EqStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#setop}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetop(XPRParser.SetopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#setop}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetop(XPRParser.SetopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#setStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetStatement(XPRParser.SetStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#setStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetStatement(XPRParser.SetStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#logop}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogop(XPRParser.LogopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#logop}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogop(XPRParser.LogopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#quantifiedStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterQuantifiedStatement(XPRParser.QuantifiedStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#quantifiedStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitQuantifiedStatement(XPRParser.QuantifiedStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatement(XPRParser.StatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatement(XPRParser.StatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link XPRParser#disjunction}.
 	 * @param ctx the parse tree
@@ -188,163 +358,73 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitConjunction(XPRParser.ConjunctionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#negation}.
+	 * Enter a parse tree produced by {@link XPRParser#statementAtom}.
 	 * @param ctx the parse tree
 	 */
-	void enterNegation(XPRParser.NegationContext ctx);
+	void enterStatementAtom(XPRParser.StatementAtomContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#negation}.
+	 * Exit a parse tree produced by {@link XPRParser#statementAtom}.
 	 * @param ctx the parse tree
 	 */
-	void exitNegation(XPRParser.NegationContext ctx);
+	void exitStatementAtom(XPRParser.StatementAtomContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#equation}.
+	 * Enter a parse tree produced by {@link XPRParser#typeDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterEquation(XPRParser.EquationContext ctx);
+	void enterTypeDeclaration(XPRParser.TypeDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#equation}.
+	 * Exit a parse tree produced by {@link XPRParser#typeDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitEquation(XPRParser.EquationContext ctx);
+	void exitTypeDeclaration(XPRParser.TypeDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#relop}.
+	 * Enter a parse tree produced by {@link XPRParser#variableDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterRelop(XPRParser.RelopContext ctx);
+	void enterVariableDeclaration(XPRParser.VariableDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#relop}.
+	 * Exit a parse tree produced by {@link XPRParser#variableDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitRelop(XPRParser.RelopContext ctx);
+	void exitVariableDeclaration(XPRParser.VariableDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#logop}.
+	 * Enter a parse tree produced by {@link XPRParser#factDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterLogop(XPRParser.LogopContext ctx);
+	void enterFactDeclaration(XPRParser.FactDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#logop}.
+	 * Exit a parse tree produced by {@link XPRParser#factDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitLogop(XPRParser.LogopContext ctx);
+	void exitFactDeclaration(XPRParser.FactDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#expression}.
+	 * Enter a parse tree produced by {@link XPRParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(XPRParser.ExpressionContext ctx);
+	void enterAssignment(XPRParser.AssignmentContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#expression}.
+	 * Exit a parse tree produced by {@link XPRParser#assignment}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(XPRParser.ExpressionContext ctx);
+	void exitAssignment(XPRParser.AssignmentContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#expression_list}.
+	 * Enter a parse tree produced by {@link XPRParser#document}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression_list(XPRParser.Expression_listContext ctx);
+	void enterDocument(XPRParser.DocumentContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#expression_list}.
+	 * Exit a parse tree produced by {@link XPRParser#document}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression_list(XPRParser.Expression_listContext ctx);
+	void exitDocument(XPRParser.DocumentContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#mulExpression}.
+	 * Enter a parse tree produced by {@link XPRParser#line}.
 	 * @param ctx the parse tree
 	 */
-	void enterMulExpression(XPRParser.MulExpressionContext ctx);
+	void enterLine(XPRParser.LineContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#mulExpression}.
+	 * Exit a parse tree produced by {@link XPRParser#line}.
 	 * @param ctx the parse tree
 	 */
-	void exitMulExpression(XPRParser.MulExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#powExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterPowExpression(XPRParser.PowExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#powExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitPowExpression(XPRParser.PowExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#atom}.
-	 * @param ctx the parse tree
-	 */
-	void enterAtom(XPRParser.AtomContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#atom}.
-	 * @param ctx the parse tree
-	 */
-	void exitAtom(XPRParser.AtomContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#call}.
-	 * @param ctx the parse tree
-	 */
-	void enterCall(XPRParser.CallContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#call}.
-	 * @param ctx the parse tree
-	 */
-	void exitCall(XPRParser.CallContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#predicate_call}.
-	 * @param ctx the parse tree
-	 */
-	void enterPredicate_call(XPRParser.Predicate_callContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#predicate_call}.
-	 * @param ctx the parse tree
-	 */
-	void exitPredicate_call(XPRParser.Predicate_callContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#predicate}.
-	 * @param ctx the parse tree
-	 */
-	void enterPredicate(XPRParser.PredicateContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#predicate}.
-	 * @param ctx the parse tree
-	 */
-	void exitPredicate(XPRParser.PredicateContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#set_theory_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterSet_theory_statement(XPRParser.Set_theory_statementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#set_theory_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitSet_theory_statement(XPRParser.Set_theory_statementContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#setop}.
-	 * @param ctx the parse tree
-	 */
-	void enterSetop(XPRParser.SetopContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#setop}.
-	 * @param ctx the parse tree
-	 */
-	void exitSetop(XPRParser.SetopContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#assignment_op}.
-	 * @param ctx the parse tree
-	 */
-	void enterAssignment_op(XPRParser.Assignment_opContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#assignment_op}.
-	 * @param ctx the parse tree
-	 */
-	void exitAssignment_op(XPRParser.Assignment_opContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPRParser#instruction}.
-	 * @param ctx the parse tree
-	 */
-	void enterInstruction(XPRParser.InstructionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#instruction}.
-	 * @param ctx the parse tree
-	 */
-	void exitInstruction(XPRParser.InstructionContext ctx);
+	void exitLine(XPRParser.LineContext ctx);
 }
