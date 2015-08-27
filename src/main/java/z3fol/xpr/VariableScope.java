@@ -1,5 +1,6 @@
 package z3fol.xpr;
 
+import com.google.common.collect.ImmutableMap;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Expr;
@@ -50,4 +51,7 @@ public class VariableScope {
         throw new IllegalStateException("Variable " + key + " is not an arithmetic type.");
     }
 
+    public Map<String, Expr> view() {
+        return ImmutableMap.copyOf(values);
+    }
 }

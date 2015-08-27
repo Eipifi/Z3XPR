@@ -1,0 +1,15 @@
+// Bank application example
+
+type Account Int;
+declare Set<Account> accounts;
+
+// Invariants
+assert Forall Account acc: acc in accounts => acc >= 0;
+
+
+// transfer operation (arg a)
+declare Account a0;
+declare Account a1;
+// precondition
+assert true;
+// postcondition

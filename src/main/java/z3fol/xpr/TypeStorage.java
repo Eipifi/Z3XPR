@@ -1,5 +1,6 @@
 package z3fol.xpr;
 
+import com.google.common.collect.ImmutableMap;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Sort;
 
@@ -24,6 +25,10 @@ public class TypeStorage {
         Sort sort = types.get(name);
         if (sort == null) throw new IllegalStateException("Can not use type " + name + "- type not declared");
         return sort;
+    }
+
+    public Map<String, Sort> view() {
+        return ImmutableMap.copyOf(types);
     }
 
 }
