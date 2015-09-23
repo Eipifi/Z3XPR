@@ -118,6 +118,16 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitAnyExpression(XPRParser.AnyExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link XPRParser#anyExpressionList}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnyExpressionList(XPRParser.AnyExpressionListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#anyExpressionList}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnyExpressionList(XPRParser.AnyExpressionListContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link XPRParser#sumop}.
 	 * @param ctx the parse tree
 	 */
@@ -227,6 +237,16 @@ public interface XPRListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSetMul(XPRParser.SetMulContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#setSumOp}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetSumOp(XPRParser.SetSumOpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#setSumOp}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetSumOp(XPRParser.SetSumOpContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link XPRParser#setAtom}.
 	 * @param ctx the parse tree

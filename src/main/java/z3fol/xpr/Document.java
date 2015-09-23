@@ -13,7 +13,7 @@ import java.util.Map;
 
 public final class Document {
 
-    private final XPRParser xprParser = new XPRParser();
+    private final Parser xprParser = new Parser();
 
     public void process(String xprCode) {
         // Get our lexer

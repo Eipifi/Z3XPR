@@ -11,13 +11,14 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        URL url = Resources.getResource("auction.xpr");
+        URL url = Resources.getResource("bank.xpr");
         String text = Resources.toString(url, Charsets.UTF_8);
 
         Document doc = new Document();
         doc.process(text);
 
         System.out.println(doc.facts());
+        System.out.println(doc.variables().get("accounts"));
     }
 
 }

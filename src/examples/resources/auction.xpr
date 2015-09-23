@@ -14,6 +14,3 @@ declare Set<Buyer> buyerSet;
 // example invariant
 assert Forall AuctionID auction, Buyer buyer: 
     Winner(auction, buyer) in winnerSet => ! (Exists Buyer buyer2: Winner(auction, buyer2) in winnerSet);
-
-
-

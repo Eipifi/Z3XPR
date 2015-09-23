@@ -5,18 +5,19 @@ import com.microsoft.z3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import z3fol.antlr.XPRBaseListener;
+import z3fol.antlr.XPRParser.*;
 
 import java.util.*;
 
-public class XPRParser extends XPRBaseListener {
+public class Parser extends XPRBaseListener {
 
-    private static final Logger log = LoggerFactory.getLogger(XPRParser.class);
+    private static final Logger log = LoggerFactory.getLogger(Parser.class);
     private final Context z3ctx;
     private final TypeStorage types;
     private final VariableScope rootScope = new VariableScope();
     private final List<BoolExpr> facts = new LinkedList<>();
 
-    public XPRParser() {
+    public Parser() {
         z3ctx = z3Context();
         types = new TypeStorage(z3ctx);
     }
@@ -34,11 +35,11 @@ public class XPRParser extends XPRBaseListener {
     }
 
     @Override
-    public void enterDocument(z3fol.antlr.XPRParser.DocumentContext ctx) {
+    public void enterDocument(DocumentContext ctx) {
         ctx.line().forEach(this::parseLine);
     }
 
-    private void parseLine(z3fol.antlr.XPRParser.LineContext ctx) {
+    private void parseLine(LineContext ctx) {
         log.debug("Parsing line: {}", ctx.getText());
 
         if (ctx.typeDeclaration() != null) parseTypeDeclaration(ctx.typeDeclaration());
@@ -48,13 +49,13 @@ public class XPRParser extends XPRBaseListener {
 
     }
 
-    private void parseAssignment(z3fol.antlr.XPRParser.AssignmentContext ctx, VariableScope scope) {
+    private void parseAssignment(AssignmentContext ctx, VariableScope scope) {
         String name = ctx.variableIdentifier().getText();
         Expr value = parseAnyExpression(ctx.anyExpression(), scope);
         scope.put(name, value);
     }
 
-    private BoolExpr parseQuantifiedStatement(z3fol.antlr.XPRParser.QuantifiedStatementContext ctx, VariableScope scope) {
+    private BoolExpr parseQuantifiedStatement(QuantifiedStatementContext ctx, VariableScope scope) {
 
         if (ctx.variableWithTypeList() != null) {
             ctx.variableWithTypeList().variableWithType().forEach((v) -> parseValDeclaration(v, scope));
@@ -63,24 +64,24 @@ public class XPRParser extends XPRBaseListener {
         BoolExpr body = parseStatement(ctx.statement(), scope);
         if (ctx.variableWithTypeList() == null) return body;
 
-        List<z3fol.antlr.XPRParser.VariableWithTypeContext> varsAndTypes = ctx.variableWithTypeList().variableWithType();
+        List<VariableWithTypeContext> varsAndTypes = ctx.variableWithTypeList().variableWithType();
 
         Sort[] argTypes = varsAndTypes.stream()
                 .map((c) -> getType(c.type()))
-                .toArray(XPRParser::sortAllocator);
+                .toArray(Parser::sortAllocator);
 
         Symbol[] argSymbols = varsAndTypes.stream()
                 .map((c) -> c.variableIdentifier().getText())
                 .map(z3ctx::mkSymbol)
-                .toArray(XPRParser::symbolAllocator);
+                .toArray(Parser::symbolAllocator);
 
         if (ctx.FORALL() != null) return z3ctx.mkForall(argTypes, argSymbols, body, 1, null, null, null, null);
         if (ctx.EXISTS() != null) return z3ctx.mkExists(argTypes, argSymbols, body, 1, null, null, null, null);
         throw new IllegalStateException();
     }
 
-    private BoolExpr parseStatement(z3fol.antlr.XPRParser.StatementContext ctx, VariableScope scope) {
-        BoolExpr[] res = ctx.disjunction().stream().map(c -> parseDisjunction(c, scope)).toArray(XPRParser::boolExprAllocator);
+    private BoolExpr parseStatement(StatementContext ctx, VariableScope scope) {
+        BoolExpr[] res = ctx.disjunction().stream().map(c -> parseDisjunction(c, scope)).toArray(Parser::boolExprAllocator);
         if (ctx.logop() != null) {
             if (ctx.logop().IMPLIES() != null) return z3ctx.mkImplies(res[0], res[1]);
             if (ctx.logop().IFF() != null) return z3ctx.mkIff(res[0], res[1]);
@@ -90,30 +91,27 @@ public class XPRParser extends XPRBaseListener {
         return res[0];
     }
 
-    private BoolExpr parseDisjunction(z3fol.antlr.XPRParser.DisjunctionContext ctx, VariableScope scope) {
-        BoolExpr[] res = ctx.conjunction().stream().map(c -> parseConjunction(c, scope)).toArray(XPRParser::boolExprAllocator);
+    private BoolExpr parseDisjunction(DisjunctionContext ctx, VariableScope scope) {
+        BoolExpr[] res = ctx.conjunction().stream().map(c -> parseConjunction(c, scope)).toArray(Parser::boolExprAllocator);
         return (res.length == 1) ? res[0] : z3ctx.mkOr(res);
     }
 
-    private BoolExpr parseConjunction(z3fol.antlr.XPRParser.ConjunctionContext ctx, VariableScope scope) {
-        BoolExpr[] res = ctx.statementAtom().stream().map(c -> parseStatementAtom(c, scope)).toArray(XPRParser::boolExprAllocator);
+    private BoolExpr parseConjunction(ConjunctionContext ctx, VariableScope scope) {
+        BoolExpr[] res = ctx.statementAtom().stream().map(c -> parseStatementAtom(c, scope)).toArray(Parser::boolExprAllocator);
         return (res.length == 1) ? res[0] : z3ctx.mkAnd(res);
     }
 
-    private BoolExpr parseStatementAtom(z3fol.antlr.XPRParser.StatementAtomContext ctx, VariableScope scope) {
+    private BoolExpr parseStatementAtom(StatementAtomContext ctx, VariableScope scope) {
         if (ctx.eqStatement() != null) return parseEqStatement(ctx.eqStatement(), scope);
         if (ctx.cmpStatement() != null) return parseCmpStatement(ctx.cmpStatement(), scope);
         if (ctx.setStatement() != null) return parseSetStatement(ctx.setStatement(), scope);
         if (ctx.quantifiedStatement() != null) return parseQuantifiedStatement(ctx.quantifiedStatement(), scope.subScope());
-        if (ctx.variableIdentifier() != null) {
-            String name = ctx.variableIdentifier().getText();
-            return scope.mustGetBool(name);
-        }
+        if (ctx.variable() != null) return (BoolExpr) parseVariable(ctx.variable(), scope);
         // TODO: negation
         return null;
     }
 
-    private BoolExpr parseSetStatement(z3fol.antlr.XPRParser.SetStatementContext ctx, VariableScope scope) {
+    private BoolExpr parseSetStatement(SetStatementContext ctx, VariableScope scope) {
         Expr e1 = parseAnyExpression(ctx.anyExpression(), scope);
         Expr e2 = parseSetExpression(ctx.setExpression(), scope);
         BoolExpr inSet = (BoolExpr) z3ctx.mkSetMembership(e1, e2);
@@ -122,7 +120,7 @@ public class XPRParser extends XPRBaseListener {
         throw new IllegalStateException();
     }
 
-    private BoolExpr parseCmpStatement(z3fol.antlr.XPRParser.CmpStatementContext ctx, VariableScope scope) {
+    private BoolExpr parseCmpStatement(CmpStatementContext ctx, VariableScope scope) {
         ArithExpr e1 = parseArithExpression(ctx.arithExpression(0), scope);
         ArithExpr e2 = parseArithExpression(ctx.arithExpression(1), scope);
         if (ctx.cmpop().LT() != null) return z3ctx.mkLt(e1, e2);
@@ -132,7 +130,7 @@ public class XPRParser extends XPRBaseListener {
         throw new IllegalStateException();
     }
 
-    private BoolExpr parseEqStatement(z3fol.antlr.XPRParser.EqStatementContext ctx, VariableScope scope) {
+    private BoolExpr parseEqStatement(EqStatementContext ctx, VariableScope scope) {
         Expr e1 = parseAnyExpression(ctx.anyExpression(0), scope);
         Expr e2 = parseAnyExpression(ctx.anyExpression(1), scope);
         if (ctx.eqop().EQ() != null) return z3ctx.mkEq(e1, e2);
@@ -140,21 +138,25 @@ public class XPRParser extends XPRBaseListener {
         throw new IllegalStateException();
     }
 
-    private Expr parseAnyExpression(z3fol.antlr.XPRParser.AnyExpressionContext ctx, VariableScope scope) {
+    private Expr parseAnyExpression(AnyExpressionContext ctx, VariableScope scope) {
         if (ctx.arithExpression() != null) return parseArithExpression(ctx.arithExpression(), scope);
         if (ctx.setExpression() != null) return parseSetExpression(ctx.setExpression(), scope);
         if (ctx.variable() != null) return parseVariable(ctx.variable(), scope);
         throw new IllegalStateException();
     }
 
-    private Expr parseVariable(z3fol.antlr.XPRParser.VariableContext ctx, VariableScope scope) {
-        if (ctx.variableIdentifier() != null) return scope.mustGet(ctx.variableIdentifier().getText());
+    private Expr parseVariable(VariableContext ctx, VariableScope scope) {
+        if (ctx.variableIdentifier() != null) return parseVariableIdentifier(ctx.variableIdentifier(), scope);
         if (ctx.variableTuple() != null) return parseVariableTuple(ctx.variableTuple(), scope);
         throw new IllegalStateException();
     }
 
-    private Expr parseVariableTuple(z3fol.antlr.XPRParser.VariableTupleContext ctx, VariableScope scope) {
-        Expr[] vars = ctx.variable().stream().map(c -> parseVariable(c, scope)).toArray(XPRParser::exprAllocator);
+    private Expr parseVariableIdentifier(VariableIdentifierContext ctx, VariableScope scope) {
+        return scope.mustGet(ctx.getText());
+    }
+
+    private Expr parseVariableTuple(VariableTupleContext ctx, VariableScope scope) {
+        Expr[] vars = ctx.anyExpression().stream().map(c -> parseAnyExpression(c, scope)).toArray(Parser::exprAllocator);
         String tupleName = ctx.typeIdentifier().getText();
         Sort sort = types.get(tupleName);
         if (sort == null) throw new IllegalStateException("Cannot use type " + tupleName + " - type not declared");
@@ -163,41 +165,54 @@ public class XPRParser extends XPRBaseListener {
         return tupleSort.mkDecl().apply(vars);
     }
 
-    private Expr parseSetExpression(z3fol.antlr.XPRParser.SetExpressionContext ctx, VariableScope scope) {
+    private Expr parseSetExpression(SetExpressionContext ctx, VariableScope scope) {
         return parseSetSum(ctx.setSum(), scope);
+
     }
 
-    private Expr parseSetSum(z3fol.antlr.XPRParser.SetSumContext ctx, VariableScope scope) {
-        Expr[] exprs = ctx.setMul().stream().map(c -> parseSetMul(c, scope)).toArray(XPRParser::exprAllocator);
-        return exprs.length == 1 ? exprs[0] : z3ctx.mkSetUnion(exprs);
+    private Expr parseSetSum(SetSumContext ctx, VariableScope scope) {
+        Expr[] exprs = ctx.setMul().stream().map(c -> parseSetMul(c, scope)).toArray(Parser::exprAllocator);
+        Expr accu = exprs[0];
+        int i = 0;
+        for (SetSumOpContext op: ctx.setSumOp()) {
+            i += 1;
+            if (op.SET_UNION() != null) {
+                accu = z3ctx.mkSetUnion(accu, exprs[i]);
+            } else { // set difference
+                accu = z3ctx.mkSetDifference(accu, exprs[i]);
+            }
+        }
+        return accu;
     }
 
-    private Expr parseSetMul(z3fol.antlr.XPRParser.SetMulContext ctx, VariableScope scope) {
-        Expr[] exprs = ctx.setAtom().stream().map(c -> parseSetAtom(c, scope)).toArray(XPRParser::exprAllocator);
+    private Expr parseSetMul(SetMulContext ctx, VariableScope scope) {
+        Expr[] exprs = ctx.setAtom().stream().map(c -> parseSetAtom(c, scope)).toArray(Parser::exprAllocator);
         return exprs.length == 1 ? exprs[0] : z3ctx.mkSetIntersection(exprs);
     }
 
-    private Expr parseSetAtom(z3fol.antlr.XPRParser.SetAtomContext ctx, VariableScope scope) {
-        if (ctx.variableIdentifier() != null) return scope.mustGet(ctx.variableIdentifier().getText());
+    private Expr parseSetAtom(SetAtomContext ctx, VariableScope scope) {
+        if (ctx.variable() != null) return parseVariable(ctx.variable(), scope);
         if (ctx.setExpression() != null) return parseSetExpression(ctx.setExpression(), scope);
         if (ctx.inlineSet() != null) return parseInlineSet(ctx.inlineSet(), scope);
         throw new IllegalStateException();
     }
 
-    private Expr parseInlineSet(z3fol.antlr.XPRParser.InlineSetContext ctx, VariableScope scope) {
-        Expr[] vars = ctx.arithExpressionList().arithExpression().stream().map(c -> parseArithExpression(c, scope)).toArray(XPRParser::exprAllocator);
-        // TODO: check if all elements are of the same sort
-        SetSort setSort = z3ctx.mkSetSort(vars[0].getSort());
-
-        return null;
+    private Expr parseInlineSet(InlineSetContext ctx, VariableScope scope) {
+        Expr[] vars = ctx.anyExpressionList().anyExpression().stream().map(c -> parseAnyExpression(c, scope)).toArray(Parser::exprAllocator);
+        // TODO: maybe check if all elements are of the same sort
+        Expr set = z3ctx.mkEmptySet(vars[0].getSort());
+        for(Expr element: vars) {
+            set = z3ctx.mkSetAdd(set, element);
+        }
+        return set;
     }
 
-    private ArithExpr parseArithExpression(z3fol.antlr.XPRParser.ArithExpressionContext ctx, VariableScope scope) {
+    private ArithExpr parseArithExpression(ArithExpressionContext ctx, VariableScope scope) {
         return parseArithSum(ctx.arithSum(), scope);
     }
 
-    private ArithExpr parseArithSum(z3fol.antlr.XPRParser.ArithSumContext ctx, VariableScope scope) {
-        ArithExpr[] values = ctx.arithMul().stream().map(c -> parseArithMul(c, scope)).toArray(XPRParser::arithExprAllocator);
+    private ArithExpr parseArithSum(ArithSumContext ctx, VariableScope scope) {
+        ArithExpr[] values = ctx.arithMul().stream().map(c -> parseArithMul(c, scope)).toArray(Parser::arithExprAllocator);
 
         ArithExpr expr = values[0];
         List<z3fol.antlr.XPRParser.SumopContext> ops = ctx.sumop();
@@ -212,8 +227,8 @@ public class XPRParser extends XPRBaseListener {
     }
 
 
-    private ArithExpr parseArithMul(z3fol.antlr.XPRParser.ArithMulContext ctx, VariableScope scope) {
-        ArithExpr[] values = ctx.arithPow().stream().map(c -> parseArithPow(c, scope)).toArray(XPRParser::arithExprAllocator);
+    private ArithExpr parseArithMul(ArithMulContext ctx, VariableScope scope) {
+        ArithExpr[] values = ctx.arithPow().stream().map(c -> parseArithPow(c, scope)).toArray(Parser::arithExprAllocator);
 
         ArithExpr expr = values[0];
         List<z3fol.antlr.XPRParser.MulopContext> ops = ctx.mulop();
@@ -227,7 +242,7 @@ public class XPRParser extends XPRBaseListener {
         return expr;
     }
 
-    private ArithExpr parseArithPow(z3fol.antlr.XPRParser.ArithPowContext ctx, VariableScope scope) {
+    private ArithExpr parseArithPow(ArithPowContext ctx, VariableScope scope) {
         ArithExpr base = parseArithAtom(ctx.arithAtom(), scope);
         if (ctx.POW() != null) {
             ArithExpr exponent = parseArithExpression(ctx.arithExpression(), scope);
@@ -235,25 +250,46 @@ public class XPRParser extends XPRBaseListener {
         } else return base;
     }
 
-    private ArithExpr parseArithAtom(z3fol.antlr.XPRParser.ArithAtomContext ctx, VariableScope scope) {
-        if (ctx.variableIdentifier() != null) return scope.mustGetArith(ctx.variableIdentifier().getText());
+    private ArithExpr parseArithAtom(ArithAtomContext ctx, VariableScope scope) {
+        if (ctx.variable() != null) return (ArithExpr) parseVariable(ctx.variable(), scope);
         if (ctx.number() != null) return parseNumber(ctx.number());
         if (ctx.arithExpression() != null) return parseArithExpression(ctx.arithExpression(), scope);
         throw new IllegalStateException();
     }
 
-    private ArithExpr parseNumber(z3fol.antlr.XPRParser.NumberContext ctx) {
+    private ArithExpr parseNumber(NumberContext ctx) {
         return z3ctx.mkInt(ctx.getText());
     }
 
-    private void parseValDeclaration(z3fol.antlr.XPRParser.VariableWithTypeContext ctx, VariableScope scope) {
-        String name = ctx.variableIdentifier().getText();
-        Sort sort = getType(ctx.type());
-        if (scope.get(name) != null) throw new IllegalStateException("Cannot redeclare variable " + name);
-        scope.put(name, z3ctx.mkConst(name, sort));
+    private void parseValDeclaration(VariableWithTypeContext ctx, VariableScope scope) {
+        declareVariable(ctx.variableIdentifier().getText(), getType(ctx.type()), scope);
     }
 
-    public void parseTypeDeclaration(z3fol.antlr.XPRParser.TypeDeclarationContext ctx) {
+    private void declareVariable(String name, Sort sort, VariableScope scope) {
+        if (scope.get(name) != null) throw new IllegalStateException("Cannot redeclare variable " + name);
+        Expr value;
+        if (sort instanceof TupleSort) {
+            TupleSort tuplesort = (TupleSort) sort;
+            // instead of making a new tuple const, we make consts for each element of a tuple...
+            int i = 0;
+            List<Expr> tupleArgs = new ArrayList<>();
+            for(FuncDecl fd: tuplesort.getFieldDecls()) {
+                String subName = name + "." + i;
+                Sort s = fd.getRange();
+                declareVariable(subName, s, scope);
+                tupleArgs.add(scope.mustGet(subName));
+                i += 1;
+            }
+            // ...and create a tuple based o the declared args
+            Expr[] tupleArgsArray = tupleArgs.stream().toArray(Parser::exprAllocator); //Java, why are you so ugly?
+            value = tuplesort.mkDecl().apply(tupleArgsArray);
+        } else {
+            value = z3ctx.mkConst(name, sort);
+        }
+        scope.put(name, value);
+    }
+
+    public void parseTypeDeclaration(TypeDeclarationContext ctx) {
         String name = ctx.typeIdentifier().getText();
         if (ctx.type() == null) {
             types.put(name, z3ctx.mkUninterpretedSort(name));
@@ -262,15 +298,15 @@ public class XPRParser extends XPRBaseListener {
         }
     }
 
-    private Sort getType(z3fol.antlr.XPRParser.TypeContext ctx) {
+    private Sort getType(TypeContext ctx) {
         return getType("__anonymous__", ctx);
     }
 
-    private Sort getType(String name, z3fol.antlr.XPRParser.TypeContext ctx) {
+    private Sort getType(String name, TypeContext ctx) {
         if (ctx.typeIdentifier() != null) return types.get(ctx.typeIdentifier().getText());
 
         if (ctx.typeTuple() != null) {
-            List<z3fol.antlr.XPRParser.TypeContext> subTypes = ctx.typeTuple().type();
+            List<TypeContext> subTypes = ctx.typeTuple().type();
             Symbol[] fieldNames = new Symbol[subTypes.size()];
             Sort[] fieldSorts = new Sort[subTypes.size()];
             for (int i = 0; i < fieldNames.length; ++i) fieldNames[i] = z3ctx.mkSymbol(i);

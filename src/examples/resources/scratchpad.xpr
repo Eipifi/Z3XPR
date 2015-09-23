@@ -1,0 +1,23 @@
+// ----- schema
+type AccountID;
+type Customer;
+type Account (AccountID, Customer, Int, Int);
+declare Set<Account> accounts;
+
+// ----- invariants
+
+// * Each account is above its limit ("BoundedInv")
+assert Forall Account account: account in accounts => account.2 >= account.3;
+
+// ----- operations
+
+// * AddAccount
+@arg Account account
+assert true;
+Op(account) -> accounts := accounts ∪ {account};
+
+// * Debit
+@arg Account account
+@arg Int value
+assert account in accounts & account.2 >= value;
+Op(accountID, value) -> accounts := accounts \ {account} ∪ Account(account.0, account.1, account.2 - value, account.3);

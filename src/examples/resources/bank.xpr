@@ -1,15 +1,11 @@
-// Bank application example
-
-type Account Int;
+// ----- schema
+type AccountID;
+type Customer;
+type Account (AccountID, Customer, Int, Int);
 declare Set<Account> accounts;
 
-// Invariants
-assert Forall Account acc: acc in accounts => acc >= 0;
 
+declare Account account;
+declare Int value;
 
-// transfer operation (arg a)
-declare Account a0;
-declare Account a1;
-// precondition
-assert true;
-// postcondition
+accounts := accounts \ {account} ∪ {Account(account.0, account.1, account.2 - value, account.3)};

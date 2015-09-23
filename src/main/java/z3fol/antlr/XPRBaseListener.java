@@ -148,6 +148,18 @@ public class XPRBaseListener implements XPRListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAnyExpressionList(XPRParser.AnyExpressionListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnyExpressionList(XPRParser.AnyExpressionListContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSumop(XPRParser.SumopContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -275,6 +287,18 @@ public class XPRBaseListener implements XPRListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSetMul(XPRParser.SetMulContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSetSumOp(XPRParser.SetSumOpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSetSumOp(XPRParser.SetSumOpContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

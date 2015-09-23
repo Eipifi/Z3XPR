@@ -36,6 +36,7 @@ SET_IN: 'in';
 SET_NOTIN: 'notin';
 SET_UNION: '∪';
 SET_INTERSECT: '∩';
+SET_DIFF: '\\';
 
 EXISTS: 'Exists';
 FORALL: 'Forall';
@@ -65,13 +66,14 @@ typeGeneric: typeIdentifier LT type GT;
 
 // Variable usage
 variable: variableIdentifier | variableTuple;
-variableTuple: typeIdentifier LPAREN variable (',' variable)+ RPAREN;
-variableIdentifier: IDENTIFIER_LC;
+variableTuple: typeIdentifier LPAREN anyExpression (',' anyExpression)+ RPAREN;
+variableIdentifier: IDENTIFIER_LC ('.' number)?;
 variableWithType: type variableIdentifier;
 variableWithTypeList: variableWithType (',' variableWithType)*;
 
 // General expression
 anyExpression: variable | arithExpression | setExpression;
+anyExpressionList: anyExpression (',' anyExpression)*;
 
 // Arithmetic expression
 sumop: PLUS | MINUS;
@@ -81,14 +83,15 @@ arithExpressionList: arithExpression (',' arithExpression)*;
 arithSum: arithMul (sumop arithMul)*;
 arithMul: arithPow (mulop arithPow)*;
 arithPow: arithAtom (POW arithExpression)?;
-arithAtom: variableIdentifier | number | LPAREN arithExpression RPAREN;
+arithAtom: variable | number | LPAREN arithExpression RPAREN;
 
 // Set expression
 setExpression: setSum;
-setSum: setMul (SET_UNION setMul)*;
+setSum: setMul (setSumOp setMul)*;
 setMul: setAtom (SET_INTERSECT setAtom)*;
-setAtom: variableIdentifier | inlineSet | LPAREN setExpression RPAREN;
-inlineSet: LBRACKET arithExpressionList RPRACKET;
+setSumOp: SET_UNION | SET_DIFF;
+setAtom: variable | inlineSet | LPAREN setExpression RPAREN;
+inlineSet: LBRACKET anyExpressionList RPRACKET;
 
 // Comparison statement
 cmpop: LT | LE | GT | GE;
@@ -108,7 +111,7 @@ quantifiedStatement: ((FORALL | EXISTS) variableWithTypeList ':')? statement;
 statement: disjunction (logop disjunction)?;
 disjunction: conjunction (OR conjunction)*;
 conjunction: statementAtom (AND statementAtom)*;
-statementAtom: NOT? (variableIdentifier | setStatement | cmpStatement | eqStatement | LPAREN quantifiedStatement RPAREN);
+statementAtom: NOT? (variable | setStatement | cmpStatement | eqStatement | LPAREN quantifiedStatement RPAREN);
 
 // ---------------------------------------------------------------------------
 
