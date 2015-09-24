@@ -1,22 +1,11 @@
 package z3fol.model;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import com.microsoft.z3.BoolExpr;
 
-public abstract class Operation {
-    public String preconditions() {
-        return Arrays.asList(this.getClass().getAnnotationsByType(Precondition.class))
-                .stream()
-                .map(Precondition::value)
-                .map(s -> s + ";")
-                .collect(Collectors.joining());
-    }
+import java.util.List;
 
-    public String postconditions() {
-        return Arrays.asList(this.getClass().getAnnotationsByType(Postcondition.class))
-                .stream()
-                .map(Postcondition::value)
-                .map(s -> s + ";")
-                .collect(Collectors.joining());
-    }
+public interface Operation {
+    List<BoolExpr> getConditions(State state);
+    void instantiateArguments(State state);
+    void applyEffect(State state);
 }

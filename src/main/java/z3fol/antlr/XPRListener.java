@@ -398,16 +398,6 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitTypeDeclaration(XPRParser.TypeDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#variableDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterVariableDeclaration(XPRParser.VariableDeclarationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPRParser#variableDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitVariableDeclaration(XPRParser.VariableDeclarationContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link XPRParser#factDeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -418,15 +408,25 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitFactDeclaration(XPRParser.FactDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#assignment}.
+	 * Enter a parse tree produced by {@link XPRParser#variableDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterAssignment(XPRParser.AssignmentContext ctx);
+	void enterVariableDeclaration(XPRParser.VariableDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#assignment}.
+	 * Exit a parse tree produced by {@link XPRParser#variableDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitAssignment(XPRParser.AssignmentContext ctx);
+	void exitVariableDeclaration(XPRParser.VariableDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableAssignment(XPRParser.VariableAssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#variableAssignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableAssignment(XPRParser.VariableAssignmentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link XPRParser#document}.
 	 * @param ctx the parse tree

@@ -19,7 +19,7 @@ GT: '>';
 GE: '>=';
 LE: '<=';
 LT: '<';
-EQ: '=';
+EQ: '==';
 NEQ: '!=';
 ASSIGN: ':=';
 POINT: '.';
@@ -117,10 +117,10 @@ statementAtom: NOT? (variable | setStatement | cmpStatement | eqStatement | LPAR
 
 // Document line varieties
 typeDeclaration: KWD_TYPE typeIdentifier type?;
-variableDeclaration: KWD_DECLARE variableWithType;
-factDeclaration: KWD_ASSERT quantifiedStatement;
-assignment: variableIdentifier ASSIGN anyExpression;
+factDeclaration: quantifiedStatement;
+variableDeclaration: variableWithType (ASSIGN anyExpression)?;
+variableAssignment: variableIdentifier ASSIGN anyExpression;
 
 // Document structure
 document: (line ';'+)*;
-line: typeDeclaration | variableDeclaration | factDeclaration | assignment;
+line: typeDeclaration | factDeclaration | variableDeclaration | variableAssignment;

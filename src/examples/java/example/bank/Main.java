@@ -1,4 +1,4 @@
-package example.simple;
+package example.bank;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -23,5 +23,4 @@ public class Main {
         System.out.println(s);
         System.out.println(facts);
     }
-
 }

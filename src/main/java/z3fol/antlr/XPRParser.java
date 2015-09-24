@@ -35,8 +35,8 @@ public class XPRParser extends Parser {
 		RULE_cmpop = 26, RULE_cmpStatement = 27, RULE_eqop = 28, RULE_eqStatement = 29, 
 		RULE_setop = 30, RULE_setStatement = 31, RULE_logop = 32, RULE_quantifiedStatement = 33, 
 		RULE_statement = 34, RULE_disjunction = 35, RULE_conjunction = 36, RULE_statementAtom = 37, 
-		RULE_typeDeclaration = 38, RULE_variableDeclaration = 39, RULE_factDeclaration = 40, 
-		RULE_assignment = 41, RULE_document = 42, RULE_line = 43;
+		RULE_typeDeclaration = 38, RULE_factDeclaration = 39, RULE_variableDeclaration = 40, 
+		RULE_variableAssignment = 41, RULE_document = 42, RULE_line = 43;
 	public static final String[] ruleNames = {
 		"number", "type", "typeIdentifier", "typeTuple", "typeSet", "variable", 
 		"variableTuple", "variableIdentifier", "variableWithType", "variableWithTypeList", 
@@ -45,13 +45,13 @@ public class XPRParser extends Parser {
 		"setExpression", "setSum", "setMul", "setSumOp", "setAtom", "inlineSet", 
 		"cmpop", "cmpStatement", "eqop", "eqStatement", "setop", "setStatement", 
 		"logop", "quantifiedStatement", "statement", "disjunction", "conjunction", 
-		"statementAtom", "typeDeclaration", "variableDeclaration", "factDeclaration", 
-		"assignment", "document", "line"
+		"statementAtom", "typeDeclaration", "factDeclaration", "variableDeclaration", 
+		"variableAssignment", "document", "line"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
 		null, "'0'", "','", "':'", "'('", "')'", "'{'", "'}'", "'+'", "'-'", "'*'", 
-		"'/'", "'>'", "'>='", "'<='", "'<'", "'='", "'!='", "':='", "'.'", "'^'", 
+		"'/'", "'>'", "'>='", "'<='", "'<'", "'=='", "'!='", "':='", "'.'", "'^'", 
 		"'|'", "'&'", "'=>'", "'<=>'", "'XOR'", "'!'", "';'", "'in'", "'notin'", 
 		"'∪'", "'∩'", "'\\'", "'Exists'", "'Forall'", "'type'", "'declare'", "'assert'"
 	};
@@ -2285,50 +2285,7 @@ public class XPRParser extends Parser {
 		return _localctx;
 	}
 
-	public static class VariableDeclarationContext extends ParserRuleContext {
-		public TerminalNode KWD_DECLARE() { return getToken(XPRParser.KWD_DECLARE, 0); }
-		public VariableWithTypeContext variableWithType() {
-			return getRuleContext(VariableWithTypeContext.class,0);
-		}
-		public VariableDeclarationContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_variableDeclaration; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XPRListener ) ((XPRListener)listener).enterVariableDeclaration(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XPRListener ) ((XPRListener)listener).exitVariableDeclaration(this);
-		}
-	}
-
-	public final VariableDeclarationContext variableDeclaration() throws RecognitionException {
-		VariableDeclarationContext _localctx = new VariableDeclarationContext(_ctx, getState());
-		enterRule(_localctx, 78, RULE_variableDeclaration);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(305);
-			match(KWD_DECLARE);
-			setState(306);
-			variableWithType();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
 	public static class FactDeclarationContext extends ParserRuleContext {
-		public TerminalNode KWD_ASSERT() { return getToken(XPRParser.KWD_ASSERT, 0); }
 		public QuantifiedStatementContext quantifiedStatement() {
 			return getRuleContext(QuantifiedStatementContext.class,0);
 		}
@@ -2348,13 +2305,11 @@ public class XPRParser extends Parser {
 
 	public final FactDeclarationContext factDeclaration() throws RecognitionException {
 		FactDeclarationContext _localctx = new FactDeclarationContext(_ctx, getState());
-		enterRule(_localctx, 80, RULE_factDeclaration);
+		enterRule(_localctx, 78, RULE_factDeclaration);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(308);
-			match(KWD_ASSERT);
-			setState(309);
+			setState(305);
 			quantifiedStatement();
 			}
 		}
@@ -2369,7 +2324,62 @@ public class XPRParser extends Parser {
 		return _localctx;
 	}
 
-	public static class AssignmentContext extends ParserRuleContext {
+	public static class VariableDeclarationContext extends ParserRuleContext {
+		public VariableWithTypeContext variableWithType() {
+			return getRuleContext(VariableWithTypeContext.class,0);
+		}
+		public TerminalNode ASSIGN() { return getToken(XPRParser.ASSIGN, 0); }
+		public AnyExpressionContext anyExpression() {
+			return getRuleContext(AnyExpressionContext.class,0);
+		}
+		public VariableDeclarationContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_variableDeclaration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof XPRListener ) ((XPRListener)listener).enterVariableDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof XPRListener ) ((XPRListener)listener).exitVariableDeclaration(this);
+		}
+	}
+
+	public final VariableDeclarationContext variableDeclaration() throws RecognitionException {
+		VariableDeclarationContext _localctx = new VariableDeclarationContext(_ctx, getState());
+		enterRule(_localctx, 80, RULE_variableDeclaration);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(307);
+			variableWithType();
+			setState(310);
+			_la = _input.LA(1);
+			if (_la==ASSIGN) {
+				{
+				setState(308);
+				match(ASSIGN);
+				setState(309);
+				anyExpression();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class VariableAssignmentContext extends ParserRuleContext {
 		public VariableIdentifierContext variableIdentifier() {
 			return getRuleContext(VariableIdentifierContext.class,0);
 		}
@@ -2377,31 +2387,31 @@ public class XPRParser extends Parser {
 		public AnyExpressionContext anyExpression() {
 			return getRuleContext(AnyExpressionContext.class,0);
 		}
-		public AssignmentContext(ParserRuleContext parent, int invokingState) {
+		public VariableAssignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_assignment; }
+		@Override public int getRuleIndex() { return RULE_variableAssignment; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XPRListener ) ((XPRListener)listener).enterAssignment(this);
+			if ( listener instanceof XPRListener ) ((XPRListener)listener).enterVariableAssignment(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XPRListener ) ((XPRListener)listener).exitAssignment(this);
+			if ( listener instanceof XPRListener ) ((XPRListener)listener).exitVariableAssignment(this);
 		}
 	}
 
-	public final AssignmentContext assignment() throws RecognitionException {
-		AssignmentContext _localctx = new AssignmentContext(_ctx, getState());
-		enterRule(_localctx, 82, RULE_assignment);
+	public final VariableAssignmentContext variableAssignment() throws RecognitionException {
+		VariableAssignmentContext _localctx = new VariableAssignmentContext(_ctx, getState());
+		enterRule(_localctx, 82, RULE_variableAssignment);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(311);
-			variableIdentifier();
 			setState(312);
-			match(ASSIGN);
+			variableIdentifier();
 			setState(313);
+			match(ASSIGN);
+			setState(314);
 			anyExpression();
 			}
 		}
@@ -2444,31 +2454,31 @@ public class XPRParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(323);
+			setState(324);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << KWD_TYPE) | (1L << KWD_DECLARE) | (1L << KWD_ASSERT) | (1L << IDENTIFIER_LC))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << LPAREN) | (1L << LBRACKET) | (1L << MINUS) | (1L << NOT) | (1L << EXISTS) | (1L << FORALL) | (1L << KWD_TYPE) | (1L << NUM_DECIMAL) | (1L << IDENTIFIER_UC) | (1L << IDENTIFIER_LC))) != 0)) {
 				{
 				{
-				setState(315);
+				setState(316);
 				line();
-				setState(317); 
+				setState(318); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(316);
+					setState(317);
 					match(SEMICOLON);
 					}
 					}
-					setState(319); 
+					setState(320); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==SEMICOLON );
 				}
 				}
-				setState(325);
+				setState(326);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -2489,14 +2499,14 @@ public class XPRParser extends Parser {
 		public TypeDeclarationContext typeDeclaration() {
 			return getRuleContext(TypeDeclarationContext.class,0);
 		}
-		public VariableDeclarationContext variableDeclaration() {
-			return getRuleContext(VariableDeclarationContext.class,0);
-		}
 		public FactDeclarationContext factDeclaration() {
 			return getRuleContext(FactDeclarationContext.class,0);
 		}
-		public AssignmentContext assignment() {
-			return getRuleContext(AssignmentContext.class,0);
+		public VariableDeclarationContext variableDeclaration() {
+			return getRuleContext(VariableDeclarationContext.class,0);
+		}
+		public VariableAssignmentContext variableAssignment() {
+			return getRuleContext(VariableAssignmentContext.class,0);
 		}
 		public LineContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2516,38 +2526,36 @@ public class XPRParser extends Parser {
 		LineContext _localctx = new LineContext(_ctx, getState());
 		enterRule(_localctx, 86, RULE_line);
 		try {
-			setState(330);
-			switch (_input.LA(1)) {
-			case KWD_TYPE:
+			setState(331);
+			switch ( getInterpreter().adaptivePredict(_input,27,_ctx) ) {
+			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(326);
+				setState(327);
 				typeDeclaration();
 				}
 				break;
-			case KWD_DECLARE:
+			case 2:
 				enterOuterAlt(_localctx, 2);
-				{
-				setState(327);
-				variableDeclaration();
-				}
-				break;
-			case KWD_ASSERT:
-				enterOuterAlt(_localctx, 3);
 				{
 				setState(328);
 				factDeclaration();
 				}
 				break;
-			case IDENTIFIER_LC:
-				enterOuterAlt(_localctx, 4);
+			case 3:
+				enterOuterAlt(_localctx, 3);
 				{
 				setState(329);
-				assignment();
+				variableDeclaration();
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
+			case 4:
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(330);
+				variableAssignment();
+				}
+				break;
 			}
 		}
 		catch (RecognitionException re) {
@@ -2562,7 +2570,7 @@ public class XPRParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3.\u014f\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3.\u0150\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -2584,20 +2592,20 @@ public class XPRParser extends Parser {
 		"\3!\3!\3!\3\"\3\"\3#\3#\3#\3#\5#\u0108\n#\3#\3#\3$\3$\3$\3$\5$\u0110\n"+
 		"$\3%\3%\3%\7%\u0115\n%\f%\16%\u0118\13%\3&\3&\3&\7&\u011d\n&\f&\16&\u0120"+
 		"\13&\3\'\5\'\u0123\n\'\3\'\3\'\3\'\3\'\3\'\3\'\3\'\3\'\5\'\u012d\n\'\3"+
-		"(\3(\3(\5(\u0132\n(\3)\3)\3)\3*\3*\3*\3+\3+\3+\3+\3,\3,\6,\u0140\n,\r"+
-		",\16,\u0141\7,\u0144\n,\f,\16,\u0147\13,\3-\3-\3-\3-\5-\u014d\n-\3-\2"+
-		"\2.\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@B"+
-		"DFHJLNPRTVX\2\13\4\2\3\3((\3\2\n\13\3\2\f\r\4\2  \"\"\3\2\16\21\3\2\22"+
-		"\23\3\2\36\37\3\2\31\33\3\2#$\u0146\2[\3\2\2\2\4b\3\2\2\2\6d\3\2\2\2\b"+
-		"f\3\2\2\2\nq\3\2\2\2\fw\3\2\2\2\16y\3\2\2\2\20\u0084\3\2\2\2\22\u0089"+
-		"\3\2\2\2\24\u008c\3\2\2\2\26\u0097\3\2\2\2\30\u0099\3\2\2\2\32\u00a1\3"+
-		"\2\2\2\34\u00a3\3\2\2\2\36\u00a5\3\2\2\2 \u00a7\3\2\2\2\"\u00af\3\2\2"+
-		"\2$\u00b8\3\2\2\2&\u00c1\3\2\2\2(\u00cc\3\2\2\2*\u00ce\3\2\2\2,\u00d0"+
+		"(\3(\3(\5(\u0132\n(\3)\3)\3*\3*\3*\5*\u0139\n*\3+\3+\3+\3+\3,\3,\6,\u0141"+
+		"\n,\r,\16,\u0142\7,\u0145\n,\f,\16,\u0148\13,\3-\3-\3-\3-\5-\u014e\n-"+
+		"\3-\2\2.\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668"+
+		":<>@BDFHJLNPRTVX\2\13\4\2\3\3((\3\2\n\13\3\2\f\r\4\2  \"\"\3\2\16\21\3"+
+		"\2\22\23\3\2\36\37\3\2\31\33\3\2#$\u0148\2[\3\2\2\2\4b\3\2\2\2\6d\3\2"+
+		"\2\2\bf\3\2\2\2\nq\3\2\2\2\fw\3\2\2\2\16y\3\2\2\2\20\u0084\3\2\2\2\22"+
+		"\u0089\3\2\2\2\24\u008c\3\2\2\2\26\u0097\3\2\2\2\30\u0099\3\2\2\2\32\u00a1"+
+		"\3\2\2\2\34\u00a3\3\2\2\2\36\u00a5\3\2\2\2 \u00a7\3\2\2\2\"\u00af\3\2"+
+		"\2\2$\u00b8\3\2\2\2&\u00c1\3\2\2\2(\u00cc\3\2\2\2*\u00ce\3\2\2\2,\u00d0"+
 		"\3\2\2\2.\u00d9\3\2\2\2\60\u00e1\3\2\2\2\62\u00e9\3\2\2\2\64\u00eb\3\2"+
 		"\2\2\66\u00ef\3\2\2\28\u00f1\3\2\2\2:\u00f5\3\2\2\2<\u00f7\3\2\2\2>\u00fb"+
 		"\3\2\2\2@\u00fd\3\2\2\2B\u0101\3\2\2\2D\u0107\3\2\2\2F\u010b\3\2\2\2H"+
 		"\u0111\3\2\2\2J\u0119\3\2\2\2L\u0122\3\2\2\2N\u012e\3\2\2\2P\u0133\3\2"+
-		"\2\2R\u0136\3\2\2\2T\u0139\3\2\2\2V\u0145\3\2\2\2X\u014c\3\2\2\2Z\\\7"+
+		"\2\2R\u0135\3\2\2\2T\u013a\3\2\2\2V\u0146\3\2\2\2X\u014d\3\2\2\2Z\\\7"+
 		"\13\2\2[Z\3\2\2\2[\\\3\2\2\2\\]\3\2\2\2]^\t\2\2\2^\3\3\2\2\2_c\5\6\4\2"+
 		"`c\5\b\5\2ac\5\n\6\2b_\3\2\2\2b`\3\2\2\2ba\3\2\2\2c\5\3\2\2\2de\7)\2\2"+
 		"e\7\3\2\2\2fg\7\6\2\2gl\5\4\3\2hi\7\4\2\2ik\5\4\3\2jh\3\2\2\2kn\3\2\2"+
@@ -2661,17 +2669,18 @@ public class XPRParser extends Parser {
 		"\u0125\3\2\2\2\u012c\u0126\3\2\2\2\u012c\u0127\3\2\2\2\u012c\u0128\3\2"+
 		"\2\2\u012dM\3\2\2\2\u012e\u012f\7%\2\2\u012f\u0131\5\6\4\2\u0130\u0132"+
 		"\5\4\3\2\u0131\u0130\3\2\2\2\u0131\u0132\3\2\2\2\u0132O\3\2\2\2\u0133"+
-		"\u0134\7&\2\2\u0134\u0135\5\22\n\2\u0135Q\3\2\2\2\u0136\u0137\7\'\2\2"+
-		"\u0137\u0138\5D#\2\u0138S\3\2\2\2\u0139\u013a\5\20\t\2\u013a\u013b\7\24"+
-		"\2\2\u013b\u013c\5\26\f\2\u013cU\3\2\2\2\u013d\u013f\5X-\2\u013e\u0140"+
-		"\7\35\2\2\u013f\u013e\3\2\2\2\u0140\u0141\3\2\2\2\u0141\u013f\3\2\2\2"+
-		"\u0141\u0142\3\2\2\2\u0142\u0144\3\2\2\2\u0143\u013d\3\2\2\2\u0144\u0147"+
-		"\3\2\2\2\u0145\u0143\3\2\2\2\u0145\u0146\3\2\2\2\u0146W\3\2\2\2\u0147"+
-		"\u0145\3\2\2\2\u0148\u014d\5N(\2\u0149\u014d\5P)\2\u014a\u014d\5R*\2\u014b"+
-		"\u014d\5T+\2\u014c\u0148\3\2\2\2\u014c\u0149\3\2\2\2\u014c\u014a\3\2\2"+
-		"\2\u014c\u014b\3\2\2\2\u014dY\3\2\2\2\35[blw\u0080\u0087\u0091\u0097\u009e"+
-		"\u00ac\u00b5\u00be\u00c4\u00cc\u00d6\u00de\u00e9\u0107\u010f\u0116\u011e"+
-		"\u0122\u012c\u0131\u0141\u0145\u014c";
+		"\u0134\5D#\2\u0134Q\3\2\2\2\u0135\u0138\5\22\n\2\u0136\u0137\7\24\2\2"+
+		"\u0137\u0139\5\26\f\2\u0138\u0136\3\2\2\2\u0138\u0139\3\2\2\2\u0139S\3"+
+		"\2\2\2\u013a\u013b\5\20\t\2\u013b\u013c\7\24\2\2\u013c\u013d\5\26\f\2"+
+		"\u013dU\3\2\2\2\u013e\u0140\5X-\2\u013f\u0141\7\35\2\2\u0140\u013f\3\2"+
+		"\2\2\u0141\u0142\3\2\2\2\u0142\u0140\3\2\2\2\u0142\u0143\3\2\2\2\u0143"+
+		"\u0145\3\2\2\2\u0144\u013e\3\2\2\2\u0145\u0148\3\2\2\2\u0146\u0144\3\2"+
+		"\2\2\u0146\u0147\3\2\2\2\u0147W\3\2\2\2\u0148\u0146\3\2\2\2\u0149\u014e"+
+		"\5N(\2\u014a\u014e\5P)\2\u014b\u014e\5R*\2\u014c\u014e\5T+\2\u014d\u0149"+
+		"\3\2\2\2\u014d\u014a\3\2\2\2\u014d\u014b\3\2\2\2\u014d\u014c\3\2\2\2\u014e"+
+		"Y\3\2\2\2\36[blw\u0080\u0087\u0091\u0097\u009e\u00ac\u00b5\u00be\u00c4"+
+		"\u00cc\u00d6\u00de\u00e9\u0107\u010f\u0116\u011e\u0122\u012c\u0131\u0138"+
+		"\u0142\u0146\u014d";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

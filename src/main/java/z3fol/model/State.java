@@ -1,4 +1,4 @@
-package z3fol.utils;
+package z3fol.model;
 
 import com.microsoft.z3.Expr;
 import com.microsoft.z3.Sort;
