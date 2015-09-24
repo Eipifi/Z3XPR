@@ -17,7 +17,7 @@ public class XPRLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, LPAREN=4, RPAREN=5, LBRACKET=6, RPRACKET=7, PLUS=8, 
+		T__0=1, T__1=2, T__2=3, LPAREN=4, RPAREN=5, LBRACKET=6, RBRACKET=7, PLUS=8, 
 		MINUS=9, TIMES=10, DIV=11, GT=12, GE=13, LE=14, LT=15, EQ=16, NEQ=17, 
 		ASSIGN=18, POINT=19, POW=20, OR=21, AND=22, IMPLIES=23, IFF=24, XOR=25, 
 		NOT=26, SEMICOLON=27, SET_IN=28, SET_NOTIN=29, SET_UNION=30, SET_INTERSECT=31, 
@@ -29,7 +29,7 @@ public class XPRLexer extends Lexer {
 	};
 
 	public static final String[] ruleNames = {
-		"T__0", "T__1", "T__2", "LPAREN", "RPAREN", "LBRACKET", "RPRACKET", "PLUS", 
+		"T__0", "T__1", "T__2", "LPAREN", "RPAREN", "LBRACKET", "RBRACKET", "PLUS", 
 		"MINUS", "TIMES", "DIV", "GT", "GE", "LE", "LT", "EQ", "NEQ", "ASSIGN", 
 		"POINT", "POW", "OR", "AND", "IMPLIES", "IFF", "XOR", "NOT", "SEMICOLON", 
 		"SET_IN", "SET_NOTIN", "SET_UNION", "SET_INTERSECT", "SET_DIFF", "EXISTS", 
@@ -44,7 +44,7 @@ public class XPRLexer extends Lexer {
 		"'∪'", "'∩'", "'\\'", "'Exists'", "'Forall'", "'type'", "'declare'", "'assert'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, "LPAREN", "RPAREN", "LBRACKET", "RPRACKET", "PLUS", 
+		null, null, null, null, "LPAREN", "RPAREN", "LBRACKET", "RBRACKET", "PLUS", 
 		"MINUS", "TIMES", "DIV", "GT", "GE", "LE", "LT", "EQ", "NEQ", "ASSIGN", 
 		"POINT", "POW", "OR", "AND", "IMPLIES", "IFF", "XOR", "NOT", "SEMICOLON", 
 		"SET_IN", "SET_NOTIN", "SET_UNION", "SET_INTERSECT", "SET_DIFF", "EXISTS", 

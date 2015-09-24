@@ -2,10 +2,16 @@
 type AccountID;
 type Customer;
 type Account (AccountID, Customer, Int, Int);
-declare Set<Account> accounts;
+declare Account{} accounts;
 
 
+// Args
 declare Account account;
 declare Int value;
 
+// Pre
+assert account in accounts & account.2 >= value;
+
+
+// Post
 accounts := accounts \ {account} ∪ {Account(account.0, account.1, account.2 - value, account.3)};

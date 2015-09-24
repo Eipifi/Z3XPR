@@ -64,13 +64,13 @@ public class XPRBaseListener implements XPRListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeGeneric(XPRParser.TypeGenericContext ctx) { }
+	@Override public void enterTypeSet(XPRParser.TypeSetContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeGeneric(XPRParser.TypeGenericContext ctx) { }
+	@Override public void exitTypeSet(XPRParser.TypeSetContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

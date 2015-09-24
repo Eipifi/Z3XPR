@@ -10,7 +10,7 @@ grammar XPR;
 LPAREN: '(';
 RPAREN: ')';
 LBRACKET: '{';
-RPRACKET: '}';
+RBRACKET: '}';
 PLUS: '+';
 MINUS: '-';
 TIMES: '*';
@@ -59,10 +59,10 @@ LineComment: '//' ~[\r\n]* -> skip;
 number: MINUS? ('0' | NUM_DECIMAL);
 
 // Variable type. Can be either a plain identifier, a tuple or a generic type (eg. Set).
-type: typeIdentifier | typeTuple | typeGeneric;
+type: typeIdentifier | typeTuple | typeSet;
 typeIdentifier: IDENTIFIER_UC;
 typeTuple: LPAREN type (',' type)* RPAREN;
-typeGeneric: typeIdentifier LT type GT;
+typeSet: typeIdentifier LBRACKET RBRACKET;
 
 // Variable usage
 variable: variableIdentifier | variableTuple;
@@ -91,7 +91,7 @@ setSum: setMul (setSumOp setMul)*;
 setMul: setAtom (SET_INTERSECT setAtom)*;
 setSumOp: SET_UNION | SET_DIFF;
 setAtom: variable | inlineSet | LPAREN setExpression RPAREN;
-inlineSet: LBRACKET anyExpressionList RPRACKET;
+inlineSet: LBRACKET anyExpressionList RBRACKET;
 
 // Comparison statement
 cmpop: LT | LE | GT | GE;
@@ -122,5 +122,5 @@ factDeclaration: KWD_ASSERT quantifiedStatement;
 assignment: variableIdentifier ASSIGN anyExpression;
 
 // Document structure
-document: (line ';')*;
+document: (line ';'+)*;
 line: typeDeclaration | variableDeclaration | factDeclaration | assignment;

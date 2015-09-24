@@ -313,14 +313,12 @@ public class Parser extends XPRBaseListener {
             for (int i = 0; i < fieldSorts.length; ++i) fieldSorts[i] = getType(subTypes.get(i));
             return z3ctx.mkTupleSort(z3ctx.mkSymbol(name), fieldNames, fieldSorts);
         }
-
-        if (ctx.typeGeneric() != null) {
-            String genericName = ctx.typeGeneric().typeIdentifier().getText();
-            if (!Objects.equals(genericName, "Set")) throw new IllegalStateException("Unknown generic type " + genericName);
-            return z3ctx.mkSetSort(getType(ctx.typeGeneric().type()));
-        }
-
+        if (ctx.typeSet() != null) return parseTypeSet(ctx.typeSet());
         throw new IllegalStateException();
+    }
+
+    private Sort parseTypeSet(TypeSetContext ctx) {
+        return z3ctx.mkSetSort(types.get(ctx.typeIdentifier().getText()));
     }
 
     private static Context z3Context() {

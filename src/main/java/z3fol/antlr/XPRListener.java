@@ -48,15 +48,15 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitTypeTuple(XPRParser.TypeTupleContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPRParser#typeGeneric}.
+	 * Enter a parse tree produced by {@link XPRParser#typeSet}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeGeneric(XPRParser.TypeGenericContext ctx);
+	void enterTypeSet(XPRParser.TypeSetContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPRParser#typeGeneric}.
+	 * Exit a parse tree produced by {@link XPRParser#typeSet}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeGeneric(XPRParser.TypeGenericContext ctx);
+	void exitTypeSet(XPRParser.TypeSetContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link XPRParser#variable}.
 	 * @param ctx the parse tree

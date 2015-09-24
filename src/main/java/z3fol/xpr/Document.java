@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import z3fol.antlr.XPRLexer;
+import z3fol.antlr.XPRParser;
 
 import java.util.List;
 import java.util.Map;
@@ -23,10 +24,10 @@ public final class Document {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
         // Pass the tokens to the parser
-        z3fol.antlr.XPRParser parser = new z3fol.antlr.XPRParser(tokens);
+        XPRParser parser = new XPRParser(tokens);
 
         // Specify our entry point
-        z3fol.antlr.XPRParser.DocumentContext documentContext = parser.document();
+        XPRParser.DocumentContext documentContext = parser.document();
 
         // Walk it and attach our listener
         ParseTreeWalker walker = new ParseTreeWalker();
