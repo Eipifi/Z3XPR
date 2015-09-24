@@ -1,4 +1,4 @@
-package example.simple;
+package example.file;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;

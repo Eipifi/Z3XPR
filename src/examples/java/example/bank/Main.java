@@ -1,26 +1,36 @@
 package example.bank;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 import com.microsoft.z3.BoolExpr;
+import z3fol.model.Operation;
+import z3fol.model.Schema;
 import z3fol.model.State;
-import z3fol.xpr.Processor;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        Schema schema = new Bank();
+        State state = schema.getState();
 
-        URL url = Resources.getResource("bank.xpr");
-        String text = Resources.toString(url, Charsets.UTF_8);
+        System.out.println("-- State:");
+        System.out.println(state);
 
-        State s = new State();
-        List<BoolExpr> facts = Processor.process(s, text);
+        for(Operation op: schema.getOperations()) {
+            System.out.println("-- Operation: " + op.getClass().getSimpleName());
 
-        System.out.println(s);
-        System.out.println(facts);
+            State newState = state.copy();
+
+            op.instantiateArguments(newState);
+            List<BoolExpr> conditions = op.getConditions(newState);
+            System.out.println("----- Conditions:");
+            System.out.println(conditions);
+
+            op.applyEffect(newState);
+            System.out.println("----- State after:");
+            System.out.println(newState);
+
+        }
     }
 }

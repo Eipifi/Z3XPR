@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 @Repeatable(XPR.All.class)
 public @interface XPR {
     String[] value();
-    Type what() default Type.MODEL;
+    Type type() default Type.MODEL;
 
     @Retention(RetentionPolicy.RUNTIME)
     @interface All {

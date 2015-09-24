@@ -1,5 +1,8 @@
 package example.bank;
 
+import z3fol.xpr.AnnotatedOperation;
+import z3fol.xpr.AnnotatedSchema;
+import z3fol.xpr.Op;
 import z3fol.xpr.XPR;
 
 @XPR({
@@ -10,21 +13,24 @@ import z3fol.xpr.XPR;
         "Account{} accounts",
 
         // Invariant: each account has a unique ID
-        "forall Account a, Account b: (a in accounts & b in accounts) => a.0 != b.0",
+        "Forall Account a, Account b: ((a in accounts) & (b in accounts)) => a.0 != b.0",
 
         // Invariant: in each account, the balance is greater than limit
-        "forall Account a: a in accounts => a.2 >= a.3"
+        "Forall Account a: a in accounts => a.2 >= a.3"
 })
-public class Bank {
+@Op(Bank.AddAccount.class)
+@Op(Bank.Debit.class)
+public class Bank extends AnnotatedSchema {
 
-    @XPR("Account account") // arguments
-    @XPR(value = "! (account in accounts)", what = XPR.Type.CONDITION)
-    @XPR(value = "accounts := accounts ∪ {account}", what = XPR.Type.EFFECT)
-    public void operationAddAccount() {}
+    @XPR(value = "Account acc", type = XPR.Type.ARGUMENT)
+    @XPR(value = "!(acc in accounts)", type = XPR.Type.CONDITION)
+    @XPR(value = "accounts := accounts ∪ {acc}", type = XPR.Type.EFFECT)
+    public static class AddAccount extends AnnotatedOperation { }
 
-    @XPR("Account account") // arguments
-    @XPR(value = "account in accounts", what = XPR.Type.CONDITION)
-    @XPR(value = "accounts := accounts \\ {account} ∪ {Account(account.0, account.1, account.2 - value, account.3)};", what = XPR.Type.EFFECT)
-    public void operationDebit() {}
+    @XPR(value = "Account acc", type = XPR.Type.ARGUMENT)
+    @XPR(value = "Int value", type = XPR.Type.ARGUMENT)
+    @XPR(value = "acc in accounts", type = XPR.Type.CONDITION)
+    @XPR(value = "accounts := accounts \\ {acc} ∪ {Account(acc.0, acc.1, acc.2 - value, acc.3)}", type = XPR.Type.EFFECT)
+    public static class Debit extends AnnotatedOperation { }
 
 }
