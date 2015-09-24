@@ -93,13 +93,18 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private BoolExpr parseStatementAtom(XPRParser.StatementAtomContext ctx, State state) {
-        if (ctx.eqStatement() != null) return parseEqStatement(ctx.eqStatement(), state);
-        if (ctx.cmpStatement() != null) return parseCmpStatement(ctx.cmpStatement(), state);
-        if (ctx.setStatement() != null) return parseSetStatement(ctx.setStatement(), state);
-        if (ctx.quantifiedStatement() != null) return parseQuantifiedStatement(ctx.quantifiedStatement(), state.copy());
-        if (ctx.variable() != null) return (BoolExpr) parseVariable(ctx.variable(), state);
-        // TODO: negation
-        return null;
+
+        BoolExpr result = null;
+
+        if (ctx.eqStatement() != null) result = parseEqStatement(ctx.eqStatement(), state);
+        if (ctx.cmpStatement() != null) result = parseCmpStatement(ctx.cmpStatement(), state);
+        if (ctx.setStatement() != null) result = parseSetStatement(ctx.setStatement(), state);
+        if (ctx.quantifiedStatement() != null) result = parseQuantifiedStatement(ctx.quantifiedStatement(), state.copy());
+        if (ctx.variable() != null) result = (BoolExpr) parseVariable(ctx.variable(), state);
+        if (result == null) throw new IllegalStateException();
+        if (ctx.NOT() != null) result = z3ctx.mkNot(result);
+
+        return result;
     }
 
     private BoolExpr parseSetStatement(XPRParser.SetStatementContext ctx, State state) {
