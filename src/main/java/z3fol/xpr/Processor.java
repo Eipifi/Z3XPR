@@ -1,9 +1,6 @@
 package z3fol.xpr;
 
 import com.microsoft.z3.BoolExpr;
-import com.microsoft.z3.Context;
-import com.microsoft.z3.Global;
-import com.microsoft.z3.Log;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -12,9 +9,7 @@ import z3fol.antlr.XPRParser;
 import z3fol.model.State;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Processor {
@@ -36,27 +31,13 @@ public class Processor {
 
         // Walk it and attach our listener
         ParseTreeWalker walker = new ParseTreeWalker();
-        DocumentListener listener = new DocumentListener(z3Context(), state);
+        DocumentListener listener = new DocumentListener(Z3Utils.ctx(), state);
         walker.walk(listener, documentContext);
         return listener.facts();
     }
 
     public static List<BoolExpr> process(State state, String... xprs) {
         return process(state, Arrays.asList(xprs));
-    }
-
-    // Singleton
-    private static Context ctx;
-
-    private static Context z3Context() {
-        if (ctx == null) {
-            Global.ToggleWarningMessages(true);
-            Log.open("test.log");
-            Map<String, String> cfg = new HashMap<>();
-            cfg.put("model", "true");
-            ctx = new Context(cfg);
-        }
-        return ctx;
     }
 
 }

@@ -17,6 +17,7 @@ public @interface XPR {
 
     enum Type {
         MODEL,
+        INVARIANT,
         ARGUMENT,
         CONDITION,
         EFFECT,

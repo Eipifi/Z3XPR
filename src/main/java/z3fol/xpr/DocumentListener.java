@@ -8,6 +8,7 @@ import z3fol.antlr.XPRParser;
 import z3fol.model.State;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DocumentListener extends XPRBaseListener {
 
@@ -48,23 +49,18 @@ public class DocumentListener extends XPRBaseListener {
 
     private BoolExpr parseQuantifiedStatement(XPRParser.QuantifiedStatementContext ctx, State state) {
 
-        if (ctx.variableWithTypeList() != null) {
-            ctx.variableWithTypeList().variableWithType().forEach((v) -> declareVariableFromContext(v, state));
-        }
+        if (ctx.variableWithTypeList() == null) return parseStatement(ctx.statement(), state);
+
+        List<String> declaredVars = ctx.variableWithTypeList()
+                .variableWithType()
+                .stream()
+                .flatMap(c -> declareVariableFromContext(c, state).stream())
+                .collect(Collectors.toList());
 
         BoolExpr body = parseStatement(ctx.statement(), state);
-        if (ctx.variableWithTypeList() == null) return body;
 
-        List<XPRParser.VariableWithTypeContext> varsAndTypes = ctx.variableWithTypeList().variableWithType();
-
-        Sort[] argTypes = varsAndTypes.stream()
-                .map((c) -> getType(c.type(), state))
-                .toArray(DocumentListener::sortAllocator);
-
-        Symbol[] argSymbols = varsAndTypes.stream()
-                .map((c) -> c.variableIdentifier().getText())
-                .map(z3ctx::mkSymbol)
-                .toArray(DocumentListener::symbolAllocator);
+        Sort[] argTypes = declaredVars.stream().map(s -> state.getExpr(s).getSort()).toArray(Z3Utils::sortAllocator);
+        Symbol[] argSymbols = declaredVars.stream().map(z3ctx::mkSymbol).toArray(Z3Utils::symbolAllocator);
 
         if (ctx.FORALL() != null) return z3ctx.mkForall(argTypes, argSymbols, body, 1, null, null, null, null);
         if (ctx.EXISTS() != null) return z3ctx.mkExists(argTypes, argSymbols, body, 1, null, null, null, null);
@@ -72,7 +68,7 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private BoolExpr parseStatement(XPRParser.StatementContext ctx, State state) {
-        BoolExpr[] res = ctx.disjunction().stream().map(c -> parseDisjunction(c, state)).toArray(DocumentListener::boolExprAllocator);
+        BoolExpr[] res = ctx.disjunction().stream().map(c -> parseDisjunction(c, state)).toArray(Z3Utils::boolExprAllocator);
         if (ctx.logop() != null) {
             if (ctx.logop().IMPLIES() != null) return z3ctx.mkImplies(res[0], res[1]);
             if (ctx.logop().IFF() != null) return z3ctx.mkIff(res[0], res[1]);
@@ -83,12 +79,12 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private BoolExpr parseDisjunction(XPRParser.DisjunctionContext ctx, State state) {
-        BoolExpr[] res = ctx.conjunction().stream().map(c -> parseConjunction(c, state)).toArray(DocumentListener::boolExprAllocator);
+        BoolExpr[] res = ctx.conjunction().stream().map(c -> parseConjunction(c, state)).toArray(Z3Utils::boolExprAllocator);
         return (res.length == 1) ? res[0] : z3ctx.mkOr(res);
     }
 
     private BoolExpr parseConjunction(XPRParser.ConjunctionContext ctx, State state) {
-        BoolExpr[] res = ctx.statementAtom().stream().map(c -> parseStatementAtom(c, state)).toArray(DocumentListener::boolExprAllocator);
+        BoolExpr[] res = ctx.statementAtom().stream().map(c -> parseStatementAtom(c, state)).toArray(Z3Utils::boolExprAllocator);
         return (res.length == 1) ? res[0] : z3ctx.mkAnd(res);
     }
 
@@ -148,11 +144,13 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private Expr parseVariableIdentifier(XPRParser.VariableIdentifierContext ctx, State state) {
-        return state.getExpr(ctx.getText());
+        Expr result = state.getExpr(ctx.getText());
+        if (result == null) throw new IllegalStateException("Variable \"" + ctx.getText() + "\" does not exist");
+        return result;
     }
 
     private Expr parseVariableTuple(XPRParser.VariableTupleContext ctx, State state) {
-        Expr[] vars = ctx.anyExpression().stream().map(c -> parseAnyExpression(c, state)).toArray(DocumentListener::exprAllocator);
+        Expr[] vars = ctx.anyExpression().stream().map(c -> parseAnyExpression(c, state)).toArray(Z3Utils::exprAllocator);
         String tupleName = ctx.typeIdentifier().getText();
         Sort sort = state.getSort(tupleName);
         if (sort == null) throw new IllegalStateException("Cannot use type " + tupleName + " - type not declared");
@@ -167,7 +165,7 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private Expr parseSetSum(XPRParser.SetSumContext ctx, State state) {
-        Expr[] exprs = ctx.setMul().stream().map(c -> parseSetMul(c, state)).toArray(DocumentListener::exprAllocator);
+        Expr[] exprs = ctx.setMul().stream().map(c -> parseSetMul(c, state)).toArray(Z3Utils::exprAllocator);
         Expr accu = exprs[0];
         int i = 0;
         for (XPRParser.SetSumOpContext op: ctx.setSumOp()) {
@@ -182,7 +180,7 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private Expr parseSetMul(XPRParser.SetMulContext ctx, State state) {
-        Expr[] exprs = ctx.setAtom().stream().map(c -> parseSetAtom(c, state)).toArray(DocumentListener::exprAllocator);
+        Expr[] exprs = ctx.setAtom().stream().map(c -> parseSetAtom(c, state)).toArray(Z3Utils::exprAllocator);
         return exprs.length == 1 ? exprs[0] : z3ctx.mkSetIntersection(exprs);
     }
 
@@ -194,7 +192,7 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private Expr parseInlineSet(XPRParser.InlineSetContext ctx, State state) {
-        Expr[] vars = ctx.anyExpressionList().anyExpression().stream().map(c -> parseAnyExpression(c, state)).toArray(DocumentListener::exprAllocator);
+        Expr[] vars = ctx.anyExpressionList().anyExpression().stream().map(c -> parseAnyExpression(c, state)).toArray(Z3Utils::exprAllocator);
         // TODO: maybe check if all elements are of the same sort
         Expr set = z3ctx.mkEmptySet(vars[0].getSort());
         for(Expr element: vars) {
@@ -208,7 +206,7 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private ArithExpr parseArithSum(XPRParser.ArithSumContext ctx, State state) {
-        ArithExpr[] values = ctx.arithMul().stream().map(c -> parseArithMul(c, state)).toArray(DocumentListener::arithExprAllocator);
+        ArithExpr[] values = ctx.arithMul().stream().map(c -> parseArithMul(c, state)).toArray(Z3Utils::arithExprAllocator);
 
         ArithExpr expr = values[0];
         List<z3fol.antlr.XPRParser.SumopContext> ops = ctx.sumop();
@@ -224,7 +222,7 @@ public class DocumentListener extends XPRBaseListener {
 
 
     private ArithExpr parseArithMul(XPRParser.ArithMulContext ctx, State state) {
-        ArithExpr[] values = ctx.arithPow().stream().map(c -> parseArithPow(c, state)).toArray(DocumentListener::arithExprAllocator);
+        ArithExpr[] values = ctx.arithPow().stream().map(c -> parseArithPow(c, state)).toArray(Z3Utils::arithExprAllocator);
 
         ArithExpr expr = values[0];
         List<z3fol.antlr.XPRParser.MulopContext> ops = ctx.mulop();
@@ -264,13 +262,15 @@ public class DocumentListener extends XPRBaseListener {
         }
     }
 
-    private void declareVariableFromContext(XPRParser.VariableWithTypeContext ctx, State state) {
-        declareVariable(ctx.variableIdentifier().getText(), getType(ctx.type(), state), state);
+    private List<String> declareVariableFromContext(XPRParser.VariableWithTypeContext ctx, State state) {
+        return declareVariable(ctx.variableIdentifier().getText(), getType(ctx.type(), state), state);
     }
 
-    private void declareVariable(String name, Sort sort, State state) {
-        if (state.getExpr(name) != null) throw new IllegalStateException("Cannot redeclare variable " + name);
-        Expr value;
+    private List<String> declareVariable(String name, Sort sort, State state) {
+        List<String> result = new ArrayList<>();
+        if (state.getExpr(name) != null) {
+            log.warn("Variable \"" + name + "\" redeclared - IGNORING");
+        }
         if (sort instanceof TupleSort) {
             TupleSort tuplesort = (TupleSort) sort;
             // instead of making a new tuple const, we make consts for each element of a tuple...
@@ -279,17 +279,19 @@ public class DocumentListener extends XPRBaseListener {
             for(FuncDecl fd: tuplesort.getFieldDecls()) {
                 String subName = name + "." + i;
                 Sort s = fd.getRange();
-                declareVariable(subName, s, state);
+                result.addAll(declareVariable(subName, s, state));
                 tupleArgs.add(state.getExpr(subName));
                 i += 1;
             }
             // ...and create a tuple based o the declared args
-            Expr[] tupleArgsArray = tupleArgs.stream().toArray(DocumentListener::exprAllocator); //Java, why are you so ugly?
-            value = tuplesort.mkDecl().apply(tupleArgsArray);
+            Expr[] tupleArgsArray = tupleArgs.stream().toArray(Z3Utils::exprAllocator); //Java, why are you so ugly?
+            state.putExpr(name, tuplesort.mkDecl().apply(tupleArgsArray));
+            // the name of a tuple is not inserted, as it is not subject to a quantifier
         } else {
-            value = z3ctx.mkConst(name, sort);
+            state.putExpr(name, z3ctx.mkConst(name, sort));
+            result.add(name);
         }
-        state.putExpr(name, value);
+        return result;
     }
 
     public void parseTypeDeclaration(XPRParser.TypeDeclarationContext ctx, State state) {
@@ -315,6 +317,10 @@ public class DocumentListener extends XPRBaseListener {
             for (int i = 0; i < fieldNames.length; ++i) fieldNames[i] = z3ctx.mkSymbol(i);
             for (int i = 0; i < fieldSorts.length; ++i) fieldSorts[i] = getType(subTypes.get(i), state);
             return z3ctx.mkTupleSort(z3ctx.mkSymbol(name), fieldNames, fieldSorts);
+
+
+
+
         }
         if (ctx.typeSet() != null) return parseTypeSet(ctx.typeSet(), state);
         throw new IllegalStateException();
@@ -324,25 +330,7 @@ public class DocumentListener extends XPRBaseListener {
         return z3ctx.mkSetSort(state.getSort(ctx.typeIdentifier().getText()));
     }
 
-    public static Sort[] sortAllocator(int size) {
-        return new Sort[size];
-    }
 
-    public static Symbol[] symbolAllocator(int size) {
-        return new Symbol[size];
-    }
-
-    public static Expr[] exprAllocator(int size) {
-        return new Expr[size];
-    }
-
-    public static BoolExpr[] boolExprAllocator(int size) {
-        return new BoolExpr[size];
-    }
-
-    public static ArithExpr[] arithExprAllocator(int size) {
-        return new ArithExpr[size];
-    }
 
     public List<BoolExpr> facts() {
         return facts;

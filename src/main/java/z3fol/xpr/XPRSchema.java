@@ -1,11 +1,9 @@
 package z3fol.xpr;
 
 import com.microsoft.z3.BoolExpr;
-import z3fol.model.Operation;
 import z3fol.model.Schema;
 import z3fol.model.State;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,14 +11,14 @@ import java.util.List;
  */
 public abstract class XPRSchema implements Schema {
 
-    public abstract List<String> getModel();
+    protected abstract List<String> getModelXPRs();
+    protected abstract List<String> getInvariantXPRs();
 
     private final State state;
-    private final List<BoolExpr> invariants;
 
     public XPRSchema() {
         state = new State();
-        invariants = Processor.process(state, getModel());
+        Processor.process(state, getModelXPRs());
     }
 
     @Override
@@ -29,8 +27,8 @@ public abstract class XPRSchema implements Schema {
     }
 
     @Override
-    public List<BoolExpr> getInvariants() {
-        return Collections.unmodifiableList(invariants);
+    public List<BoolExpr> getInvariants(State state) {
+        return Processor.process(state.copy(), getInvariantXPRs());
     }
 
 }

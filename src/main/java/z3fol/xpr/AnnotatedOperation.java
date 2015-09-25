@@ -18,4 +18,9 @@ public abstract class AnnotatedOperation implements XPROperation {
     public List<String> getEffectsXPR() {
         return AnnotationUtils.findXPRs(this.getClass(), XPR.Type.EFFECT);
     }
+
+    @Override
+    public String getName() {
+        return this.getClass().getSimpleName();
+    }
 }

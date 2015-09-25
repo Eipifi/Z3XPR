@@ -7,8 +7,13 @@ import java.util.List;
 public abstract class AnnotatedSchema extends XPRSchema {
 
     @Override
-    public List<String> getModel() {
+    public List<String> getModelXPRs() {
         return AnnotationUtils.findXPRs(this.getClass(), XPR.Type.MODEL);
+    }
+
+    @Override
+    protected List<String> getInvariantXPRs() {
+        return AnnotationUtils.findXPRs(this.getClass(), XPR.Type.INVARIANT);
     }
 
     @Override

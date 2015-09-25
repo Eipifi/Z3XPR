@@ -5,6 +5,7 @@ import com.microsoft.z3.BoolExpr;
 import java.util.List;
 
 public interface Operation {
+    String getName();
     List<BoolExpr> getConditions(State state);
     void instantiateArguments(State state);
     void applyEffect(State state);
