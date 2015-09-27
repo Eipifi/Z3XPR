@@ -43,6 +43,8 @@ FORALL: 'Forall';
 KWD_TYPE: 'type';
 KWD_DECLARE: 'declare';
 KWD_ASSERT: 'assert';
+KWD_TRUE: 'true';
+KWD_FALSE: 'false';
 
 NUM_DECIMAL: [0-9]+;
 IDENTIFIER_UC : [A-Z_][a-zA-Z0-9_]*;
@@ -72,7 +74,7 @@ variableWithType: type variableIdentifier;
 variableWithTypeList: variableWithType (',' variableWithType)*;
 
 // General expression
-anyExpression: variable | arithExpression | setExpression;
+anyExpression: variable | arithExpression | setExpression | boolExpression;
 anyExpressionList: anyExpression (',' anyExpression)*;
 
 // Arithmetic expression
@@ -91,7 +93,9 @@ setSum: setMul (setSumOp setMul)*;
 setMul: setAtom (SET_INTERSECT setAtom)*;
 setSumOp: SET_UNION | SET_DIFF;
 setAtom: variable | inlineSet | LPAREN setExpression RPAREN;
-inlineSet: LBRACKET anyExpressionList RBRACKET;
+inlineSet: inlineSetEmpty | inlineSetValues;
+inlineSetValues: LBRACKET anyExpressionList RBRACKET;
+inlineSetEmpty: typeIdentifier  LBRACKET RBRACKET;
 
 // Comparison statement
 cmpop: LT | LE | GT | GE;
@@ -105,13 +109,16 @@ eqStatement: anyExpression eqop anyExpression;
 setop: SET_IN | SET_NOTIN;
 setStatement: anyExpression setop setExpression;
 
+// Bool expression
+boolExpression : KWD_TRUE | KWD_FALSE;
+
 // General logic statement
 logop: IMPLIES | IFF | XOR;
 quantifiedStatement: ((FORALL | EXISTS) variableWithTypeList ':')? statement;
 statement: disjunction (logop disjunction)?;
 disjunction: conjunction (OR conjunction)*;
 conjunction: statementAtom (AND statementAtom)*;
-statementAtom: NOT? (variable | setStatement | cmpStatement | eqStatement | LPAREN quantifiedStatement RPAREN);
+statementAtom: NOT? (variable | boolExpression | setStatement | cmpStatement | eqStatement | LPAREN quantifiedStatement RPAREN);
 
 // ---------------------------------------------------------------------------
 

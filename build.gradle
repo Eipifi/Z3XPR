@@ -21,6 +21,10 @@ dependencies {
     compile fileTree(dir: 'lib', include: ['*.jar'])
 }
 
+test {
+    systemProperty "java.library.path", file("./lib")
+}
+
 tasks.withType(JavaExec) {
     systemProperty "java.library.path", file("./lib")
 }

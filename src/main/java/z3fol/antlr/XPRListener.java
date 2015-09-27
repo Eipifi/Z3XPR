@@ -268,6 +268,26 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitInlineSet(XPRParser.InlineSetContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link XPRParser#inlineSetValues}.
+	 * @param ctx the parse tree
+	 */
+	void enterInlineSetValues(XPRParser.InlineSetValuesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#inlineSetValues}.
+	 * @param ctx the parse tree
+	 */
+	void exitInlineSetValues(XPRParser.InlineSetValuesContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#inlineSetEmpty}.
+	 * @param ctx the parse tree
+	 */
+	void enterInlineSetEmpty(XPRParser.InlineSetEmptyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#inlineSetEmpty}.
+	 * @param ctx the parse tree
+	 */
+	void exitInlineSetEmpty(XPRParser.InlineSetEmptyContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link XPRParser#cmpop}.
 	 * @param ctx the parse tree
 	 */
@@ -327,6 +347,16 @@ public interface XPRListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSetStatement(XPRParser.SetStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPRParser#boolExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterBoolExpression(XPRParser.BoolExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#boolExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitBoolExpression(XPRParser.BoolExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link XPRParser#logop}.
 	 * @param ctx the parse tree

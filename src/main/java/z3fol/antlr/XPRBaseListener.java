@@ -328,6 +328,30 @@ public class XPRBaseListener implements XPRListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterInlineSetValues(XPRParser.InlineSetValuesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInlineSetValues(XPRParser.InlineSetValuesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterInlineSetEmpty(XPRParser.InlineSetEmptyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInlineSetEmpty(XPRParser.InlineSetEmptyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCmpop(XPRParser.CmpopContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -395,6 +419,18 @@ public class XPRBaseListener implements XPRListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSetStatement(XPRParser.SetStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBoolExpression(XPRParser.BoolExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBoolExpression(XPRParser.BoolExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

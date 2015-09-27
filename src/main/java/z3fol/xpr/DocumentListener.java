@@ -44,6 +44,14 @@ public class DocumentListener extends XPRBaseListener {
     private void parseVariableAssignment(XPRParser.VariableAssignmentContext ctx, State state) {
         String name = ctx.variableIdentifier().getText();
         Expr value = parseAnyExpression(ctx.anyExpression(), state);
+
+        Sort expectedSort = state.getExpr(name).getSort();
+        Sort obtainedSort = value.getSort();
+
+        if (!expectedSort.equals(obtainedSort)) {
+            throw new XPRTypeMismatchException(expectedSort, obtainedSort);
+        }
+
         state.putExpr(name, value);
     }
 
@@ -92,6 +100,7 @@ public class DocumentListener extends XPRBaseListener {
 
         BoolExpr result = null;
 
+        if (ctx.boolExpression() != null) return parseBoolExpression(ctx.boolExpression(), state);
         if (ctx.eqStatement() != null) result = parseEqStatement(ctx.eqStatement(), state);
         if (ctx.cmpStatement() != null) result = parseCmpStatement(ctx.cmpStatement(), state);
         if (ctx.setStatement() != null) result = parseSetStatement(ctx.setStatement(), state);
@@ -134,6 +143,13 @@ public class DocumentListener extends XPRBaseListener {
         if (ctx.arithExpression() != null) return parseArithExpression(ctx.arithExpression(), state);
         if (ctx.setExpression() != null) return parseSetExpression(ctx.setExpression(), state);
         if (ctx.variable() != null) return parseVariable(ctx.variable(), state);
+        if (ctx.boolExpression() != null) return parseBoolExpression(ctx.boolExpression(), state);
+        throw new IllegalStateException();
+    }
+
+    private BoolExpr parseBoolExpression(XPRParser.BoolExpressionContext ctx, State state) {
+        if (ctx.KWD_TRUE() != null) return z3ctx.mkTrue();
+        if (ctx.KWD_FALSE() != null) return z3ctx.mkFalse();
         throw new IllegalStateException();
     }
 
@@ -145,7 +161,7 @@ public class DocumentListener extends XPRBaseListener {
 
     private Expr parseVariableIdentifier(XPRParser.VariableIdentifierContext ctx, State state) {
         Expr result = state.getExpr(ctx.getText());
-        if (result == null) throw new IllegalStateException("Variable \"" + ctx.getText() + "\" does not exist");
+        if (result == null) throw new UnknownVariableException(ctx.getText());
         return result;
     }
 
@@ -192,10 +208,28 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private Expr parseInlineSet(XPRParser.InlineSetContext ctx, State state) {
+        if (ctx.inlineSetEmpty() != null) return parseInlineSetEmpty(ctx.inlineSetEmpty(), state);
+        if (ctx.inlineSetValues() != null) return parseInlineSetValues(ctx.inlineSetValues(), state);
+        throw new IllegalStateException();
+    }
+
+    private Expr parseInlineSetEmpty(XPRParser.InlineSetEmptyContext ctx, State state) {
+        String name = ctx.typeIdentifier().getText();
+        Sort domain = state.getSort(name);
+        if (domain == null) {
+            throw new UnknownSortException(name);
+        }
+        return z3ctx.mkEmptySet(domain);
+    }
+
+    private Expr parseInlineSetValues(XPRParser.InlineSetValuesContext ctx, State state) {
         Expr[] vars = ctx.anyExpressionList().anyExpression().stream().map(c -> parseAnyExpression(c, state)).toArray(Z3Utils::exprAllocator);
-        // TODO: maybe check if all elements are of the same sort
-        Expr set = z3ctx.mkEmptySet(vars[0].getSort());
+        Sort setElementSort = vars[0].getSort();
+        Expr set = z3ctx.mkEmptySet(setElementSort);
         for(Expr element: vars) {
+            if (!setElementSort.equals(element.getSort())) {
+                throw new XPRTypeMismatchException(setElementSort, element.getSort());
+            }
             set = z3ctx.mkSetAdd(set, element);
         }
         return set;
@@ -258,7 +292,14 @@ public class DocumentListener extends XPRBaseListener {
     private void parseVariableDeclaration(XPRParser.VariableDeclarationContext ctx, State state) {
         declareVariableFromContext(ctx.variableWithType(), state);
         if (ctx.anyExpression() != null) {
-            state.putExpr(ctx.variableWithType().variableIdentifier().getText(), parseAnyExpression(ctx.anyExpression(), state));
+            String name = ctx.variableWithType().variableIdentifier().getText();
+            Expr value = parseAnyExpression(ctx.anyExpression(), state);
+            Sort expectedSort = state.getExpr(name).getSort();
+            Sort obtainedSort = value.getSort();
+            if (!expectedSort.equals(obtainedSort)) {
+                throw new XPRTypeMismatchException(expectedSort, obtainedSort);
+            }
+            state.putExpr(name, value);
         }
     }
 
@@ -308,7 +349,12 @@ public class DocumentListener extends XPRBaseListener {
     }
 
     private Sort getType(String name, XPRParser.TypeContext ctx, State state) {
-        if (ctx.typeIdentifier() != null) return state.getSort(ctx.typeIdentifier().getText());
+        if (ctx.typeIdentifier() != null) {
+            String idName = ctx.typeIdentifier().getText();
+            Sort sort = state.getSort(idName);
+            if (sort == null) throw new UnknownSortException(idName);
+            return sort;
+        }
 
         if (ctx.typeTuple() != null) {
             List<XPRParser.TypeContext> subTypes = ctx.typeTuple().type();
@@ -317,10 +363,6 @@ public class DocumentListener extends XPRBaseListener {
             for (int i = 0; i < fieldNames.length; ++i) fieldNames[i] = z3ctx.mkSymbol(i);
             for (int i = 0; i < fieldSorts.length; ++i) fieldSorts[i] = getType(subTypes.get(i), state);
             return z3ctx.mkTupleSort(z3ctx.mkSymbol(name), fieldNames, fieldSorts);
-
-
-
-
         }
         if (ctx.typeSet() != null) return parseTypeSet(ctx.typeSet(), state);
         throw new IllegalStateException();
