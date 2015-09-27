@@ -5,6 +5,7 @@ It allows you to quickly generate Z3 expressions ([Expr](https://github.com/Z3Pr
 
 Example:
 
+```java
     State s = new State();
     Processor.process(s, 
         // declare sets
@@ -20,16 +21,20 @@ Example:
     );
     // Now you can access the expressions as Z3 objects
     Expr mathExpr = s.getExpr("someMath");
+```
 
 Z3XPR can use Z3 to prove satisfiability of expressions:
 
+```java
     State s = new State();
     List<BoolExpr> statements = Processor.process(s, "Exists Int x: x > 0;");
     Status result = Z3Utils.check(statements);
     // result == Status.SATISFIABLE
+```
 
 Z3XPR can parse multiline expressions:
 
+```java
     State s = new State();
     Status result = Z3Utils.check(Processor.process(s, 
         "Set{} set;",
@@ -37,5 +42,6 @@ Z3XPR can parse multiline expressions:
         "Exists Int x: x in set & x < 4;"
     ));
     // result == Status.UNSATISFIABLE
+```    
     
 The grammar is defined here: https://github.com/Eipifi/Z3XPR/blob/master/src/main/java/z3fol/antlr/XPR.g4
