@@ -37,7 +37,7 @@ Z3XPR can parse multiline expressions:
 ```java
     State s = new State();
     Status result = Z3Utils.check(Processor.process(s, 
-        "Set{} set;",
+        "Int{} set;",
         "Forall Int x: x in set => x > 5;",
         "Exists Int x: x in set & x < 4;"
     ));
@@ -94,10 +94,10 @@ Int{} mul := {1, 2, 3, 4} ∩ {3, 4, 5, 6}; // {3, 4}
 Int{} dif := {1, 2, 3, 4} \ {3, 4, 5, 6}; // {1, 2}
 
 // Elements can be checked for membership in a set:
-Bool isInside := 5 in {1, 3, 5, 7};
+Bool isInside := (5 in {1, 3, 5, 7});
 
 // Subset checking is also available:
-Bool inSubset := {1, 2} ⊂ {1, 2, 3, 4};
+Bool inSubset := ({1, 2} ⊂ {1, 2, 3, 4});
 
 // Logic operations:
 Bool a;
@@ -128,8 +128,4 @@ type Balance Int;
 type Account (ID, Balance);
 Account{} accounts;
 Forall Account a, Account b: (a in accounts & b in accounts) => a.0 != b.0;
-
-
-
-
 ```

@@ -116,6 +116,12 @@ public class ProcessorTest {
     }
 
     @Test
+    public void shouldComputeExponentiation() {
+        assertEquals(Status.UNSATISFIABLE, solve("! (2^6 == 64);"));
+        assertEquals(Status.SATISFIABLE, solve("3^4 == 81;"));
+    }
+
+    @Test
     public void shouldUnderstandLogicOpOrder() {
         assertEquals(Status.SATISFIABLE, solve("true | true & false;"));
         assertEquals(Status.UNSATISFIABLE, solve("(true | true) & false"));

@@ -9,10 +9,7 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-
         Map<String, Status> result = SequentialCheck.check(new SimpleBank());
-
         System.out.println(result);
-
     }
 }
