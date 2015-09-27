@@ -81,6 +81,11 @@ public class ProcessorTest {
     }
 
     @Test
+    public void shouldAcceptStatementAsBoolValue() {
+        process("Bool inSubset := ({1, 2} ⊂ {1, 2, 3, 4});");
+    }
+
+    @Test
     public void shouldAcceptInlineSet() {
         process("Int{} set := {1, 2, 3};");
     }
