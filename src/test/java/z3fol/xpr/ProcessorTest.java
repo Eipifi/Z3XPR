@@ -161,11 +161,13 @@ public class ProcessorTest {
                 "Exists Entry x: x in entries & x.0 == 5;"));
     }
 
+    @Test
+    public void shouldFoo() {
+        assertEquals(Status.UNSATISFIABLE, solve("Forall Int x: x >= 42"));
+    }
+
     private Status solve(String... xpr) {
-        BoolExpr statement = Z3Utils.and(Processor.process(new State(), xpr));
-        Solver s = Z3Utils.ctx().mkSolver();
-        s.add(statement);
-        return s.check();
+        return Z3Utils.check(Processor.process(new State(), xpr));
     }
 
     private void process(String... xpr) {

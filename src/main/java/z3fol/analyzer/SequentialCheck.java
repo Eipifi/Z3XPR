@@ -30,9 +30,8 @@ public class SequentialCheck {
             BoolExpr before = Z3Utils.and(invariantsBefore, preconditionsBefore);
             BoolExpr after = Z3Utils.and(invariantsAfter);
             BoolExpr implication = Z3Utils.ctx().mkNot(Z3Utils.ctx().mkImplies(before, after));
-            Solver solver = Z3Utils.ctx().mkSolver();
-            solver.add(implication);
-            return solver.check();
+
+            return Z3Utils.check(implication);
 
         }));
     }

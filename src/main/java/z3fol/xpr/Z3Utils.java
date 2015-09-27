@@ -1,5 +1,6 @@
 package z3fol.xpr;
 
+import com.google.common.collect.Lists;
 import com.microsoft.z3.*;
 
 import java.util.*;
@@ -17,6 +18,16 @@ public class Z3Utils {
             ctx = new Context(cfg);
         }
         return ctx;
+    }
+
+    public static Status check(BoolExpr... conditions) {
+        return check(Lists.newArrayList(conditions));
+    }
+
+    public static Status check(List<BoolExpr> conditions) {
+        Solver s = ctx().mkSolver();
+        s.add(and(conditions));
+        return s.check();
     }
 
     @SafeVarargs
