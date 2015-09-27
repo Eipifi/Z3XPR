@@ -29,15 +29,10 @@ tasks.withType(JavaExec) {
     systemProperty "java.library.path", file("./lib")
 }
 
-['file', 'bank', 'check'].each { def targetName ->
+['bank', 'check'].each { def targetName ->
     String targetUc = targetName.capitalize()
     tasks.create(name: "runExample$targetUc", dependsOn: 'examplesClasses', type: JavaExec) {
         main = "example." + targetName + ".Main"
         classpath = sourceSets.examples.runtimeClasspath
     }
-}
-
-task(runExamples, dependsOn: 'examplesClasses', type: JavaExec) {
-    main = 'example.simple.Main'
-    classpath = sourceSets.examples.runtimeClasspath
 }
