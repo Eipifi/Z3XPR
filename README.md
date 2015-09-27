@@ -6,14 +6,32 @@ It allows you to quickly generate Z3 expressions ([Expr](https://github.com/Z3Pr
 Example:
 
     State s = new State();
-    List<BoolExpr> statements = Processor.process("Exists Int x: x > 0;");
+    Processor.process(s, 
+        // declare sets
+        "Int{} aSet;",                  
+        // declare variables
+        "Int foobar := 5;",            
+        // define new types of variables
+        "type MyType;",                 
+        // perform simple math operations
+        "Int someMath := 2 + 2 * 2;",   
+        // set operations are also supported
+        "Int{} newSet := aSet ∪ {1, 2, 3} ∩ {1, 3, 5};"                 
+    );
+    // Now you can access the expressions as Z3 objects
+    Expr mathExpr = s.getExpr("someMath");
+
+Z3XPR can use Z3 to prove satisfiability of expressions:
+
+    State s = new State();
+    List<BoolExpr> statements = Processor.process(s, "Exists Int x: x > 0;");
     Status result = Z3Utils.check(statements);
     // result == Status.SATISFIABLE
 
 Z3XPR can parse multiline expressions:
 
     State s = new State();
-    Status result = Z3Utils.check(Processor.process(
+    Status result = Z3Utils.check(Processor.process(s, 
         "Set{} set;",
         "Forall Int x: x in set => x > 5;",
         "Exists Int x: x in set & x < 4;"
