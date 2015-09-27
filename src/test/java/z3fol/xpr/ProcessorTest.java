@@ -101,6 +101,22 @@ public class ProcessorTest {
     }
 
     @Test
+    public void shouldCompute() {
+        assertEquals(Status.UNSATISFIABLE, solve("2 + 2 != 4;"));
+    }
+
+    @Test
+    public void shouldUnderstandOpOrder() {
+        assertEquals(Status.UNSATISFIABLE, solve("2 + 2 * 2 != 6;"));
+    }
+
+    @Test
+    public void shouldUnderstandLogicOpOrder() {
+        assertEquals(Status.SATISFIABLE, solve("true | true & false;"));
+        assertEquals(Status.UNSATISFIABLE, solve("(true | true) & false"));
+    }
+
+    @Test
     public void shouldSatisfyUnboundVariables() {
         assertEquals(Status.SATISFIABLE, solve("Int x; x == 2;"));
     }
@@ -109,7 +125,7 @@ public class ProcessorTest {
     public void shouldUseDependantStatements() {
         assertEquals(Status.UNSATISFIABLE, solve(
                 "Int{} s;",
-                "Forall Int x: !(x in s)",
+                "Forall Int x: !(x in s);",
                 "Exists Int x: x in s;"));
     }
 
@@ -119,6 +135,30 @@ public class ProcessorTest {
                 "Int{} s;",
                 "Forall Int x: x in s => x > 3;",
                 "Exists Int x: x in s & x < 2;"));
+    }
+
+    @Test
+    public void shouldUnderstandTupleFieldAccess() {
+        process(
+                "type Entry (Int, Int);",
+                "Entry foo;",
+                "foo.0 == 1");
+    }
+
+    @Test(expected = UnknownVariableException.class)
+    public void shouldUnderstandTupleSize() {
+        process(
+                "type Entry (Int, Int);",
+                "Entry foo;",
+                "foo.5 == 1");
+    }
+
+    @Test
+    public void shouldUnderstandTuples() {
+        assertEquals(Status.UNSATISFIABLE, solve(
+                "type Entry (Int, Int);",
+                "Entry{} entries := {Entry(4, 5), Entry(4, 6)};",
+                "Exists Entry x: x in entries & x.0 == 5;"));
     }
 
     private Status solve(String... xpr) {

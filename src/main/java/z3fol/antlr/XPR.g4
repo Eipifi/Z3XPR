@@ -110,7 +110,7 @@ setop: SET_IN | SET_NOTIN;
 setStatement: anyExpression setop setExpression;
 
 // Bool expression
-boolExpression : KWD_TRUE | KWD_FALSE;
+boolExpression : KWD_TRUE | KWD_FALSE | LPAREN quantifiedStatement RPAREN;
 
 // General logic statement
 logop: IMPLIES | IFF | XOR;
@@ -118,7 +118,7 @@ quantifiedStatement: ((FORALL | EXISTS) variableWithTypeList ':')? statement;
 statement: disjunction (logop disjunction)?;
 disjunction: conjunction (OR conjunction)*;
 conjunction: statementAtom (AND statementAtom)*;
-statementAtom: NOT? (variable | boolExpression | setStatement | cmpStatement | eqStatement | LPAREN quantifiedStatement RPAREN);
+statementAtom: NOT? (variable| setStatement | cmpStatement | eqStatement | LPAREN quantifiedStatement RPAREN | boolExpression );
 
 // ---------------------------------------------------------------------------
 

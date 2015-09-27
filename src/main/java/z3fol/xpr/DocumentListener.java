@@ -150,6 +150,7 @@ public class DocumentListener extends XPRBaseListener {
     private BoolExpr parseBoolExpression(XPRParser.BoolExpressionContext ctx, State state) {
         if (ctx.KWD_TRUE() != null) return z3ctx.mkTrue();
         if (ctx.KWD_FALSE() != null) return z3ctx.mkFalse();
+        if (ctx.quantifiedStatement() != null) return parseQuantifiedStatement(ctx.quantifiedStatement(), state);
         throw new IllegalStateException();
     }
 
