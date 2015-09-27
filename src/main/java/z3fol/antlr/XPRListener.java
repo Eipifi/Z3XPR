@@ -348,6 +348,16 @@ public interface XPRListener extends ParseTreeListener {
 	 */
 	void exitSetStatement(XPRParser.SetStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link XPRParser#subsetExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSubsetExpression(XPRParser.SubsetExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPRParser#subsetExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSubsetExpression(XPRParser.SubsetExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link XPRParser#boolExpression}.
 	 * @param ctx the parse tree
 	 */

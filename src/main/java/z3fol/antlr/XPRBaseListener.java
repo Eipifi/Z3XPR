@@ -424,6 +424,18 @@ public class XPRBaseListener implements XPRListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSubsetExpression(XPRParser.SubsetExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSubsetExpression(XPRParser.SubsetExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBoolExpression(XPRParser.BoolExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}

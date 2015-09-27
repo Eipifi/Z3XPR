@@ -37,6 +37,7 @@ SET_NOTIN: 'notin';
 SET_UNION: '∪';
 SET_INTERSECT: '∩';
 SET_DIFF: '\\';
+SET_SUB: '⊂';
 
 EXISTS: 'Exists';
 FORALL: 'Forall';
@@ -108,6 +109,7 @@ eqStatement: anyExpression eqop anyExpression;
 // Set statement
 setop: SET_IN | SET_NOTIN;
 setStatement: anyExpression setop setExpression;
+subsetExpression: setExpression SET_SUB setExpression;
 
 // Bool expression
 boolExpression : KWD_TRUE | KWD_FALSE | LPAREN quantifiedStatement RPAREN;
@@ -118,7 +120,7 @@ quantifiedStatement: ((FORALL | EXISTS) variableWithTypeList ':')? statement;
 statement: disjunction (logop disjunction)?;
 disjunction: conjunction (OR conjunction)*;
 conjunction: statementAtom (AND statementAtom)*;
-statementAtom: NOT? (variable| setStatement | cmpStatement | eqStatement | LPAREN quantifiedStatement RPAREN | boolExpression );
+statementAtom: NOT? (variable| setStatement | subsetExpression | cmpStatement | eqStatement | LPAREN quantifiedStatement RPAREN | boolExpression );
 
 // ---------------------------------------------------------------------------
 

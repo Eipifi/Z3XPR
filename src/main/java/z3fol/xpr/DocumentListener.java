@@ -104,12 +104,19 @@ public class DocumentListener extends XPRBaseListener {
         if (ctx.eqStatement() != null) result = parseEqStatement(ctx.eqStatement(), state);
         if (ctx.cmpStatement() != null) result = parseCmpStatement(ctx.cmpStatement(), state);
         if (ctx.setStatement() != null) result = parseSetStatement(ctx.setStatement(), state);
+        if (ctx.subsetExpression() != null) result = parseSubsetExpression(ctx.subsetExpression(), state);
         if (ctx.quantifiedStatement() != null) result = parseQuantifiedStatement(ctx.quantifiedStatement(), state.copy());
         if (ctx.variable() != null) result = (BoolExpr) parseVariable(ctx.variable(), state);
         if (result == null) throw new IllegalStateException();
         if (ctx.NOT() != null) result = z3ctx.mkNot(result);
 
         return result;
+    }
+
+    private BoolExpr parseSubsetExpression(XPRParser.SubsetExpressionContext ctx, State state) {
+        Expr set0 = parseSetExpression(ctx.setExpression(0), state);
+        Expr set1 = parseSetExpression(ctx.setExpression(1), state);
+        return (BoolExpr) z3ctx.mkSetSubset(set0, set1);
     }
 
     private BoolExpr parseSetStatement(XPRParser.SetStatementContext ctx, State state) {

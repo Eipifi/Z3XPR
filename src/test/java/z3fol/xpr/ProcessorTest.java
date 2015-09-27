@@ -162,8 +162,14 @@ public class ProcessorTest {
     }
 
     @Test
-    public void shouldFoo() {
-        assertEquals(Status.UNSATISFIABLE, solve("Forall Int x: x >= 42"));
+    public void shouldUnderstandSubsets() {
+        assertEquals(Status.UNSATISFIABLE, solve(
+                "Int{} ints := {1, 2, 3, 4};",
+                "{2, 5} ⊂ ints;"));
+
+        assertEquals(Status.SATISFIABLE, solve(
+                "Int{} ints := {1, 2, 3, 4};",
+                "{2, 3} ⊂ ints;"));
     }
 
     private Status solve(String... xpr) {
