@@ -951,12 +951,30 @@ DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALgetDatatype
   Z3_func_decl result = Z3_get_datatype_sort_constructor_accessor((Z3_context)a0, (Z3_sort)a1, (unsigned)a2, (unsigned)a3);
   return (jlong) result;
 }
+DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALdatatypeUpdateField(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jlong a2, jlong a3) {
+  Z3_ast result = Z3_datatype_update_field((Z3_context)a0, (Z3_func_decl)a1, (Z3_ast)a2, (Z3_ast)a3);
+  return (jlong) result;
+}
 DLL_VIS JNIEXPORT jint JNICALL Java_com_microsoft_z3_Native_INTERNALgetRelationArity(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
   unsigned result = Z3_get_relation_arity((Z3_context)a0, (Z3_sort)a1);
   return (jint) result;
 }
 DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALgetRelationColumn(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jint a2) {
   Z3_sort result = Z3_get_relation_column((Z3_context)a0, (Z3_sort)a1, (unsigned)a2);
+  return (jlong) result;
+}
+DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALmkAtmost(JNIEnv * jenv, jclass cls, jlong a0, jint a1, jlongArray a2, jint a3) {
+  GETLONGAELEMS(Z3_ast, a2, _a2);
+  Z3_ast result = Z3_mk_atmost((Z3_context)a0, (unsigned)a1, _a2, (unsigned)a3);
+  RELEASELONGAELEMS(a2, _a2);
+  return (jlong) result;
+}
+DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALmkPble(JNIEnv * jenv, jclass cls, jlong a0, jint a1, jlongArray a2, jintArray a3, jint a4) {
+  GETLONGAELEMS(Z3_ast, a2, _a2);
+  int * _a3 = (int*) jenv->GetIntArrayElements(a3, NULL);
+  Z3_ast result = Z3_mk_pble((Z3_context)a0, (unsigned)a1, _a2, _a3, (int)a4);
+  RELEASELONGAELEMS(a2, _a2);
+  jenv->ReleaseIntArrayElements(a3, (jint*)_a3, JNI_ABORT);
   return (jlong) result;
 }
 DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALfuncDeclToAst(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
@@ -1578,6 +1596,9 @@ DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALdisableTrace
 DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALresetMemory(JNIEnv * jenv, jclass cls) {
   Z3_reset_memory();
 }
+DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALfinalizeMemory(JNIEnv * jenv, jclass cls) {
+  Z3_finalize_memory();
+}
 DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALmkFixedpoint(JNIEnv * jenv, jclass cls, jlong a0) {
   Z3_fixedpoint result = Z3_mk_fixedpoint((Z3_context)a0);
   return (jlong) result;
@@ -1683,6 +1704,77 @@ DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALfixedpointPu
 }
 DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALfixedpointPop(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
   Z3_fixedpoint_pop((Z3_context)a0, (Z3_fixedpoint)a1);
+}
+DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALmkOptimize(JNIEnv * jenv, jclass cls, jlong a0) {
+  Z3_optimize result = Z3_mk_optimize((Z3_context)a0);
+  return (jlong) result;
+}
+DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeIncRef(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_optimize_inc_ref((Z3_context)a0, (Z3_optimize)a1);
+}
+DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeDecRef(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_optimize_dec_ref((Z3_context)a0, (Z3_optimize)a1);
+}
+DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeAssert(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jlong a2) {
+  Z3_optimize_assert((Z3_context)a0, (Z3_optimize)a1, (Z3_ast)a2);
+}
+DLL_VIS JNIEXPORT jint JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeAssertSoft(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jlong a2, jstring a3, jlong a4) {
+  Z3_string _a3 = (Z3_string) jenv->GetStringUTFChars(a3, NULL);
+  unsigned result = Z3_optimize_assert_soft((Z3_context)a0, (Z3_optimize)a1, (Z3_ast)a2, _a3, (Z3_symbol)a4);
+  return (jint) result;
+}
+DLL_VIS JNIEXPORT jint JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeMaximize(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jlong a2) {
+  unsigned result = Z3_optimize_maximize((Z3_context)a0, (Z3_optimize)a1, (Z3_ast)a2);
+  return (jint) result;
+}
+DLL_VIS JNIEXPORT jint JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeMinimize(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jlong a2) {
+  unsigned result = Z3_optimize_minimize((Z3_context)a0, (Z3_optimize)a1, (Z3_ast)a2);
+  return (jint) result;
+}
+DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizePush(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_optimize_push((Z3_context)a0, (Z3_optimize)a1);
+}
+DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizePop(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_optimize_pop((Z3_context)a0, (Z3_optimize)a1);
+}
+DLL_VIS JNIEXPORT jint JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeCheck(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  int result = Z3_optimize_check((Z3_context)a0, (Z3_optimize)a1);
+  return (jint) result;
+}
+DLL_VIS JNIEXPORT jstring JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeGetReasonUnknown(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_string result = Z3_optimize_get_reason_unknown((Z3_context)a0, (Z3_optimize)a1);
+  return jenv->NewStringUTF(result);
+}
+DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeGetModel(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_model result = Z3_optimize_get_model((Z3_context)a0, (Z3_optimize)a1);
+  return (jlong) result;
+}
+DLL_VIS JNIEXPORT void JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeSetParams(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jlong a2) {
+  Z3_optimize_set_params((Z3_context)a0, (Z3_optimize)a1, (Z3_params)a2);
+}
+DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeGetParamDescrs(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_param_descrs result = Z3_optimize_get_param_descrs((Z3_context)a0, (Z3_optimize)a1);
+  return (jlong) result;
+}
+DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeGetLower(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jint a2) {
+  Z3_ast result = Z3_optimize_get_lower((Z3_context)a0, (Z3_optimize)a1, (unsigned)a2);
+  return (jlong) result;
+}
+DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeGetUpper(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jint a2) {
+  Z3_ast result = Z3_optimize_get_upper((Z3_context)a0, (Z3_optimize)a1, (unsigned)a2);
+  return (jlong) result;
+}
+DLL_VIS JNIEXPORT jstring JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeToString(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_string result = Z3_optimize_to_string((Z3_context)a0, (Z3_optimize)a1);
+  return jenv->NewStringUTF(result);
+}
+DLL_VIS JNIEXPORT jstring JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeGetHelp(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_string result = Z3_optimize_get_help((Z3_context)a0, (Z3_optimize)a1);
+  return jenv->NewStringUTF(result);
+}
+DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALoptimizeGetStatistics(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
+  Z3_stats result = Z3_optimize_get_statistics((Z3_context)a0, (Z3_optimize)a1);
+  return (jlong) result;
 }
 DLL_VIS JNIEXPORT jlong JNICALL Java_com_microsoft_z3_Native_INTERNALmkAstVector(JNIEnv * jenv, jclass cls, jlong a0) {
   Z3_ast_vector result = Z3_mk_ast_vector((Z3_context)a0);
@@ -2897,6 +2989,16 @@ DLL_VIS JNIEXPORT jboolean JNICALL Java_com_microsoft_z3_Native_INTERNALfpaGetNu
 DLL_VIS JNIEXPORT jstring JNICALL Java_com_microsoft_z3_Native_INTERNALfpaGetNumeralSignificandString(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
   Z3_string result = Z3_fpa_get_numeral_significand_string((Z3_context)a0, (Z3_ast)a1);
   return jenv->NewStringUTF(result);
+}
+DLL_VIS JNIEXPORT jboolean JNICALL Java_com_microsoft_z3_Native_INTERNALfpaGetNumeralSignificandUint64(JNIEnv * jenv, jclass cls, jlong a0, jlong a1, jobject a2) {
+  __uint64 _a2;
+  Z3_bool result = Z3_fpa_get_numeral_significand_uint64((Z3_context)a0, (Z3_ast)a1, &_a2);
+  {
+     jclass mc    = jenv->GetObjectClass(a2);
+     jfieldID fid = jenv->GetFieldID(mc, "value", "J");
+     jenv->SetLongField(a2, fid, (jlong) _a2);
+  }
+  return (jboolean) result;
 }
 DLL_VIS JNIEXPORT jstring JNICALL Java_com_microsoft_z3_Native_INTERNALfpaGetNumeralExponentString(JNIEnv * jenv, jclass cls, jlong a0, jlong a1) {
   Z3_string result = Z3_fpa_get_numeral_exponent_string((Z3_context)a0, (Z3_ast)a1);

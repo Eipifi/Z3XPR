@@ -1,0 +1,9 @@
+LPAREN=1
+RPAREN=2
+Whitespace=3
+Newline=4
+BlockComment=5
+LineComment=6
+ATOM=7
+'('=1
+')'=2

@@ -37,6 +37,26 @@ public class SequentialCheckTest {
         public static class Del extends AnnotatedOperation { }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Test
     public void shouldCorrectlyClassifySetExample() {
         Map<String, Status> result = SequentialCheck.check(new SetOps());

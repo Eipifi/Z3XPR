@@ -1,0 +1,7 @@
+(let
+    (declare x int)
+    (declare y int)
+    (forall x y
+        (ge (sum (var x) (var y)) 0)
+    )
+)

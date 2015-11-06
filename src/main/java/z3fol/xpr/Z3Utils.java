@@ -32,29 +32,9 @@ public class Z3Utils {
 
     @SafeVarargs
     public static BoolExpr and(List<BoolExpr>... expressions) {
-        BoolExpr[] array = Arrays.stream(expressions).flatMap(Collection::stream).toArray(Z3Utils::boolExprAllocator);
+        BoolExpr[] array = Arrays.stream(expressions).flatMap(Collection::stream).toArray(BoolExpr[]::new);
         if (array.length == 0) return ctx().mkTrue();
         if (array.length == 1) return array[0];
         return ctx().mkAnd(array);
-    }
-
-    public static Sort[] sortAllocator(int size) {
-        return new Sort[size];
-    }
-
-    public static Symbol[] symbolAllocator(int size) {
-        return new Symbol[size];
-    }
-
-    public static Expr[] exprAllocator(int size) {
-        return new Expr[size];
-    }
-
-    public static BoolExpr[] boolExprAllocator(int size) {
-        return new BoolExpr[size];
-    }
-
-    public static ArithExpr[] arithExprAllocator(int size) {
-        return new ArithExpr[size];
     }
 }

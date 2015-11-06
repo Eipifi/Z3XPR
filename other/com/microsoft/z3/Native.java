@@ -9,7 +9,10 @@ public final class Native {
   public static class UIntArrayPtr { public int[] value; }
   public static native void setInternalErrorHandler(long ctx);
 
-  static { System.loadLibrary("z3java"); }
+  static {
+    try { System.loadLibrary("z3java"); }
+    catch (UnsatisfiedLinkError ex) { System.loadLibrary("libz3java"); }
+  }
 
   protected static native void INTERNALglobalParamSet(String a0, String a1);
   protected static native void INTERNALglobalParamResetAll();
@@ -188,8 +191,11 @@ public final class Native {
   protected static native long INTERNALgetDatatypeSortConstructor(long a0, long a1, int a2);
   protected static native long INTERNALgetDatatypeSortRecognizer(long a0, long a1, int a2);
   protected static native long INTERNALgetDatatypeSortConstructorAccessor(long a0, long a1, int a2, int a3);
+  protected static native long INTERNALdatatypeUpdateField(long a0, long a1, long a2, long a3);
   protected static native int INTERNALgetRelationArity(long a0, long a1);
   protected static native long INTERNALgetRelationColumn(long a0, long a1, int a2);
+  protected static native long INTERNALmkAtmost(long a0, int a1, long[] a2, int a3);
+  protected static native long INTERNALmkPble(long a0, int a1, long[] a2, int[] a3, int a4);
   protected static native long INTERNALfuncDeclToAst(long a0, long a1);
   protected static native boolean INTERNALisEqFuncDecl(long a0, long a1, long a2);
   protected static native int INTERNALgetFuncDeclId(long a0, long a1);
@@ -316,6 +322,7 @@ public final class Native {
   protected static native void INTERNALenableTrace(String a0);
   protected static native void INTERNALdisableTrace(String a0);
   protected static native void INTERNALresetMemory();
+  protected static native void INTERNALfinalizeMemory();
   protected static native long INTERNALmkFixedpoint(long a0);
   protected static native void INTERNALfixedpointIncRef(long a0, long a1);
   protected static native void INTERNALfixedpointDecRef(long a0, long a1);
@@ -343,6 +350,25 @@ public final class Native {
   protected static native long INTERNALfixedpointFromFile(long a0, long a1, String a2);
   protected static native void INTERNALfixedpointPush(long a0, long a1);
   protected static native void INTERNALfixedpointPop(long a0, long a1);
+  protected static native long INTERNALmkOptimize(long a0);
+  protected static native void INTERNALoptimizeIncRef(long a0, long a1);
+  protected static native void INTERNALoptimizeDecRef(long a0, long a1);
+  protected static native void INTERNALoptimizeAssert(long a0, long a1, long a2);
+  protected static native int INTERNALoptimizeAssertSoft(long a0, long a1, long a2, String a3, long a4);
+  protected static native int INTERNALoptimizeMaximize(long a0, long a1, long a2);
+  protected static native int INTERNALoptimizeMinimize(long a0, long a1, long a2);
+  protected static native void INTERNALoptimizePush(long a0, long a1);
+  protected static native void INTERNALoptimizePop(long a0, long a1);
+  protected static native int INTERNALoptimizeCheck(long a0, long a1);
+  protected static native String INTERNALoptimizeGetReasonUnknown(long a0, long a1);
+  protected static native long INTERNALoptimizeGetModel(long a0, long a1);
+  protected static native void INTERNALoptimizeSetParams(long a0, long a1, long a2);
+  protected static native long INTERNALoptimizeGetParamDescrs(long a0, long a1);
+  protected static native long INTERNALoptimizeGetLower(long a0, long a1, int a2);
+  protected static native long INTERNALoptimizeGetUpper(long a0, long a1, int a2);
+  protected static native String INTERNALoptimizeToString(long a0, long a1);
+  protected static native String INTERNALoptimizeGetHelp(long a0, long a1);
+  protected static native long INTERNALoptimizeGetStatistics(long a0, long a1);
   protected static native long INTERNALmkAstVector(long a0);
   protected static native void INTERNALastVectorIncRef(long a0, long a1);
   protected static native void INTERNALastVectorDecRef(long a0, long a1);
@@ -614,6 +640,7 @@ public final class Native {
   protected static native int INTERNALfpaGetSbits(long a0, long a1);
   protected static native boolean INTERNALfpaGetNumeralSign(long a0, long a1, IntPtr a2);
   protected static native String INTERNALfpaGetNumeralSignificandString(long a0, long a1);
+  protected static native boolean INTERNALfpaGetNumeralSignificandUint64(long a0, long a1, LongPtr a2);
   protected static native String INTERNALfpaGetNumeralExponentString(long a0, long a1);
   protected static native boolean INTERNALfpaGetNumeralExponentInt64(long a0, long a1, LongPtr a2);
   protected static native long INTERNALmkFpaToIeeeBv(long a0, long a1);
@@ -2168,6 +2195,15 @@ public final class Native {
       return res;
   }
 
+  public static long datatypeUpdateField(long a0, long a1, long a2, long a3) throws Z3Exception
+  {
+      long res = INTERNALdatatypeUpdateField(a0, a1, a2, a3);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
   public static int getRelationArity(long a0, long a1) throws Z3Exception
   {
       int res = INTERNALgetRelationArity(a0, a1);
@@ -2180,6 +2216,24 @@ public final class Native {
   public static long getRelationColumn(long a0, long a1, int a2) throws Z3Exception
   {
       long res = INTERNALgetRelationColumn(a0, a1, a2);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static long mkAtmost(long a0, int a1, long[] a2, int a3) throws Z3Exception
+  {
+      long res = INTERNALmkAtmost(a0, a1, a2, a3);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static long mkPble(long a0, int a1, long[] a2, int[] a3, int a4) throws Z3Exception
+  {
+      long res = INTERNALmkPble(a0, a1, a2, a3, a4);
       Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
       if (err != Z3_error_code.Z3_OK)
           throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
@@ -3273,6 +3327,11 @@ public final class Native {
       INTERNALresetMemory();
   }
 
+  public static void finalizeMemory()
+  {
+      INTERNALfinalizeMemory();
+  }
+
   public static long mkFixedpoint(long a0) throws Z3Exception
   {
       long res = INTERNALmkFixedpoint(a0);
@@ -3502,6 +3561,171 @@ public final class Native {
       Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
       if (err != Z3_error_code.Z3_OK)
           throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+  }
+
+  public static long mkOptimize(long a0) throws Z3Exception
+  {
+      long res = INTERNALmkOptimize(a0);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static void optimizeIncRef(long a0, long a1) throws Z3Exception
+  {
+      INTERNALoptimizeIncRef(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+  }
+
+  public static void optimizeDecRef(long a0, long a1) throws Z3Exception
+  {
+      INTERNALoptimizeDecRef(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+  }
+
+  public static void optimizeAssert(long a0, long a1, long a2) throws Z3Exception
+  {
+      INTERNALoptimizeAssert(a0, a1, a2);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+  }
+
+  public static int optimizeAssertSoft(long a0, long a1, long a2, String a3, long a4) throws Z3Exception
+  {
+      int res = INTERNALoptimizeAssertSoft(a0, a1, a2, a3, a4);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static int optimizeMaximize(long a0, long a1, long a2) throws Z3Exception
+  {
+      int res = INTERNALoptimizeMaximize(a0, a1, a2);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static int optimizeMinimize(long a0, long a1, long a2) throws Z3Exception
+  {
+      int res = INTERNALoptimizeMinimize(a0, a1, a2);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static void optimizePush(long a0, long a1) throws Z3Exception
+  {
+      INTERNALoptimizePush(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+  }
+
+  public static void optimizePop(long a0, long a1) throws Z3Exception
+  {
+      INTERNALoptimizePop(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+  }
+
+  public static int optimizeCheck(long a0, long a1) throws Z3Exception
+  {
+      int res = INTERNALoptimizeCheck(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static String optimizeGetReasonUnknown(long a0, long a1) throws Z3Exception
+  {
+      String res = INTERNALoptimizeGetReasonUnknown(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static long optimizeGetModel(long a0, long a1) throws Z3Exception
+  {
+      long res = INTERNALoptimizeGetModel(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static void optimizeSetParams(long a0, long a1, long a2) throws Z3Exception
+  {
+      INTERNALoptimizeSetParams(a0, a1, a2);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+  }
+
+  public static long optimizeGetParamDescrs(long a0, long a1) throws Z3Exception
+  {
+      long res = INTERNALoptimizeGetParamDescrs(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static long optimizeGetLower(long a0, long a1, int a2) throws Z3Exception
+  {
+      long res = INTERNALoptimizeGetLower(a0, a1, a2);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static long optimizeGetUpper(long a0, long a1, int a2) throws Z3Exception
+  {
+      long res = INTERNALoptimizeGetUpper(a0, a1, a2);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static String optimizeToString(long a0, long a1) throws Z3Exception
+  {
+      String res = INTERNALoptimizeToString(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static String optimizeGetHelp(long a0, long a1) throws Z3Exception
+  {
+      String res = INTERNALoptimizeGetHelp(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static long optimizeGetStatistics(long a0, long a1) throws Z3Exception
+  {
+      long res = INTERNALoptimizeGetStatistics(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
   }
 
   public static long mkAstVector(long a0) throws Z3Exception
@@ -5890,6 +6114,15 @@ public final class Native {
   public static String fpaGetNumeralSignificandString(long a0, long a1) throws Z3Exception
   {
       String res = INTERNALfpaGetNumeralSignificandString(a0, a1);
+      Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
+      if (err != Z3_error_code.Z3_OK)
+          throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));
+      return res;
+  }
+
+  public static boolean fpaGetNumeralSignificandUint64(long a0, long a1, LongPtr a2) throws Z3Exception
+  {
+      boolean res = INTERNALfpaGetNumeralSignificandUint64(a0, a1, a2);
       Z3_error_code err = Z3_error_code.fromInt(INTERNALgetErrorCode(a0));
       if (err != Z3_error_code.Z3_OK)
           throw new Z3Exception(INTERNALgetErrorMsgEx(a0, err.toInt()));

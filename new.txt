@@ -1,0 +1,7 @@
+(let
+    (declare x (type int))
+    (declare y (type bool)
+    (type Foo (type bool))
+    (set x 5)
+    expression
+)

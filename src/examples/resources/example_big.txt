@@ -1,0 +1,33 @@
+schema bank {
+
+    type account (int id, int balance) {
+        assert balance >= 0
+    }
+
+    account{} accounts
+    assert forall account a, account b: {a, b} ⊂ accounts => a.id != b.id
+
+    operation transfer(account from, account to, int amount) {
+        assert amount > 0
+        assert from.balance >= amount
+        assert {from, to} ⊂ accounts
+
+        new_from = (from.id, from.balance - amount)
+        new_to = (from.id, from.balance + amount)
+        accounts = accounts \ {from, to} ∪ {new_from, new_to}
+    }
+
+    operation add_account(account new_acc) {
+        assert forall account x: x in accounts => x.id != new_acc.id
+        accounts = accounts ∪ {new_acc}
+    }
+
+    operation add_funds(account acc, int amount) {
+        assert acc in accounts
+        assert amount > 0
+
+        new_acc = (acc.id, acc.balance + amount)
+        accounts = accounts \ {acc} ∪ {new_acc}
+    }
+
+}
